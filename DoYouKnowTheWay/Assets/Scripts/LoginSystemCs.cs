@@ -11,8 +11,8 @@ public class LoginSystemCs : MonoBehaviour
     [SerializeField]
     private string urlRegister , urlLogin;
 
-    [Header("UserInfo")]
-    public string UserName, UserPassword, UserEmail, InputName, InputPassword;
+   /* [Header("UserInfo")]
+    public string UserName, UserPassword, UserEmail, InputName, InputPassword;*/
     public bool UserLoggedIn,SamePass, loginValidated;
     [Header("Login")]
     [SerializeField]
@@ -25,18 +25,17 @@ public class LoginSystemCs : MonoBehaviour
 
     [Header("SQL Table")]
     [SerializeField]
-    private WWW loginData;
-    [SerializeField]
-    private string[] loginStuff;
+    private Text updatetxt0;
 
     private bool isEmailValid;
 
+    
     private string key = "CARLOSISBAE";
     private string stufftoEncrypt = "12345";
     public string encryptedString;
     void  Start()
     {
-        urlRegister = "http://localhost/Valkyrie/connect.php";
+       // urlRegister = "http://localhost/Valkyrie/connect.php";
         isEmailValid = false;
         /* loginData = new WWW("http://localhost/Valkyrie/connect.php");
          yield return loginData;
@@ -46,38 +45,43 @@ public class LoginSystemCs : MonoBehaviour
        // encryptedString = MD5.Create(stufftoEncrypt);
         
     }
-    bool emailCheck (string mystring)
+    bool myMailCheck (string mystring)
     {
         string str = mystring;
         Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
         Match match = regex.Match(str);
-        if (match.Success)
+        if (!match.Success || mystring == null || mystring == "")
         {
-            Debug.Log(str + " is correct");
+
+            updatetxt0.text = "Status :  " + str + "  Is not a Email , please enter a valid email ";
             return true;
         }
-        else
+        else if (match.Success)
         {
-            Debug.Log(str + " is incorrect");
+           
+            updatetxt0.text = "Status :  " + str + "  Is a valid Email ";
             return false;
         }
-            
 
+        return false;
         
     }
     
 	void Update ()
     {
+        myMailCheck(EmailText.text.ToString());
         if (UserPasswordText!= null && PasswordVerifictationText != null)
         {
             if (UserPasswordText.text== PasswordVerifictationText.text)
             {
                 SamePass = true;
+                updatetxt0.text = "Hey Gringo , passwords match =) ";
                 return;
             }
             else
             {
-                //Debug.Log("Password !=Same");
+                Debug.Log("Password !=Same");
+                updatetxt0.text = "Hey Gringo , password no match  ";
                 return;
             }
         }
@@ -86,50 +90,69 @@ public class LoginSystemCs : MonoBehaviour
             SamePass = false; 
         }
 	}
- 
-   public void Register ( )
-    {
-        if (SamePass == true && UserText.text != null && EmailText.text != null )
-        {
-            string username = UserText.text.ToString();
-            string email = EmailText.text.ToString();
-            string password = PasswordText.text.ToString();
-            WWWForm form = new WWWForm();
-            form.AddField("usernamePost", username);
-            form.AddField("emailPost", email);
-            form.AddField("passwordPost", password);
 
+    IEnumerator Register ( )
+    {
+            WWWForm form = new WWWForm();
+            form.AddField("usernamePost", UserText.text.ToString());
+            form.AddField("emailPost", EmailText.text.ToString());
+            form.AddField("passwordPost", PasswordText.text.ToString());
             WWW www = new WWW(urlRegister, form);
-            Debug.Log("Registerd ");
+            updatetxt0.text = "You are registering...........";
+            Debug.Log("Data");
+            yield return www;
+
+        string CreateAccountReturn = www.text;
+        Debug.Log(CreateAccountReturn);
+        // updatetxt0.text = "You are Registered !";
+    }
+    public void doRegister  ()
+    {
+        if (SamePass == true && UserText.text != null && EmailText.text != null)
+        {
+        StartCoroutine("Register");
         }
         else
         {
             Debug.Log("Please enter the text properly " );
+            updatetxt0.text = "Please enter all fields correctly ";
         }
-       
+
     }
     public void doLogin ()
     {
-        StartCoroutine("Login");
+        if (UserNameText != null && UserPasswordText != null)
+        {
+            StartCoroutine("Login");
+        }
+        else
+        {
+            Debug.Log("Login was a failure as they are both null");
+            updatetxt0.text = "Login Failed =/";
+
+        }
+
     }
     IEnumerator Login()
     {
-        Debug.Log("Coroutines started ");
-        string userName = UserNameText.text.ToString() ;
-        string password= UserPasswordText.text.ToString() ;
-        WWWForm form = new WWWForm();
+      
+            Debug.Log("Coroutines started ");
+            WWWForm form = new WWWForm();
 
-        form.AddField("usernamePost", userName);
-        form.AddField("passwordPost", password);
-        WWW www = new WWW(urlLogin, form);
-         yield return  www;
+            form.AddField("usernamePost", UserNameText.text.ToString());
+            form.AddField("passwordPost", UserPasswordText.text.ToString());
+            WWW www = new WWW(urlLogin, form);
+     
 
-        Debug.Log(www.text);
+            Debug.Log(www.error);
 
-        if (www.text == " Login Success")
-        {
-
-        }
+            if (www.text == " Login Success")
+            {
+                Debug.Log("Login was a success");
+                updatetxt0.text = "You are logged in !";
+            }
+            yield return www;
+      
     }
    
 
