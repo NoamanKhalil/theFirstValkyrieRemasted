@@ -1,27 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
-public class LoadScenes : MonoBehaviour {
+///LoadScene , used to control scenes andor quit d
 
-
+public class LoadScenes : MonoBehaviour
+{
 	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
-	public void Play (string StartGame) {
-
-		Application.LoadLevel (1);
-	}
-
-	public void Score (string ScoreScene)
+	public void Score (string str)
 	{
-		Application.LoadLevel (2);
+		SceneManager.LoadSceneAsync (str);
 	}
 
 	public void Exit ()
@@ -29,8 +18,4 @@ public class LoadScenes : MonoBehaviour {
 		Application.Quit();
 	}
 
-	public void Back (string Back)
-	{
-		Application.LoadLevel (0);
-	}
 }

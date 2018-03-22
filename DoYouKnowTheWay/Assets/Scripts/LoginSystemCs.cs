@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
+/// LoginSystemCs , used to manage the login and register for the game 
+
 public class LoginSystemCs : MonoBehaviour
 {
     [SerializeField]
@@ -69,7 +71,10 @@ public class LoginSystemCs : MonoBehaviour
     
 	void Update ()
     {
+        ///Checks if email charcters are legal/ valid 
         myMailCheck(EmailText.text.ToString());
+
+        /// Condition to check if email is Valid 
         if (UserPasswordText!= null && PasswordVerifictationText != null)
         {
             if (UserPasswordText.text== PasswordVerifictationText.text)

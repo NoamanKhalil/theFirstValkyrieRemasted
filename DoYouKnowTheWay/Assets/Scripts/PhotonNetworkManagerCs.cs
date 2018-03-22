@@ -3,50 +3,76 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon;
+using System.Threading;
 
-public class PhotonNetworkManagerCs :Photon.PunBehaviour
+///  Network manager
+
+public class PhotonNetworkManagerCs : Photon.MonoBehaviour
 {
-    [SerializeField]
-    private GameObject Camera;
+    ///Used to store refrence to player prefab 
     [SerializeField]
     private GameObject[] Player;
+
+    ///Used to store refrence to spawnPoints postion as a prefab 
     [SerializeField]
     private GameObject[] spawnPoints;
+
+    ///Used to store refrence to debug connection info 
     [SerializeField]
     private Text networkUpdateText;
     
-    private PhotonView photonView;
+    private PhotonView myphotonView;
 
-    private int spawnCount;
-	// Use this for initialization
-	void Start ()
+    /// used to store current version 
+    const string version = "0.1";
+
+    ///options for multiplayer room 
+    RoomOptions myroom;
+
+
+    // Use this for initialization
+    void Start ()
     {
-        PhotonNetwork.ConnectUsingSettings("0.1");
-        photonView = GetComponent<PhotonView>();
-        spawnCount = 0;
-	}
+        PhotonNetwork.ConnectUsingSettings(version);
+       myphotonView = GetComponent<PhotonView>();
+        myroom = new RoomOptions() { isVisible = true, maxPlayers = 2 };
+    }
     public virtual void OnJoinedLobby()
     {
         Debug.Log("Connected to master");
         PhotonNetwork.JoinOrCreateRoom("New", null, null);
     }
-
-    public virtual void OnJoinedRoom()
+      public virtual void OnConnectedToMaster()
+      {
+        Debug.Log("Connected to master");
+        PhotonNetwork.JoinOrCreateRoom("New", null, null);
+      }
+   public void OnJoinedRoom()
     {
         //PhotonNetwork.Instantiate(Player[spawnCount].name, spawnPoints[spawnCount].transform.position, spawnPoints[spawnCount].transform.rotation, 0);
-        PhotonNetwork.Instantiate(Player[PhotonNetwork.room.PlayerCount-1].name, spawnPoints[PhotonNetwork.room.PlayerCount-1].transform.position, spawnPoints[PhotonNetwork.player.ID - 1].transform.rotation, 0);
-       
-        if (Camera !=null)
-        Camera.SetActive(false);
+        PhotonNetwork.Instantiate(Player[PhotonNetwork.player.ID - 1].name, spawnPoints[PhotonNetwork.player.ID - 1].transform.position, spawnPoints[PhotonNetwork.player.ID - 1].transform.rotation, 0);
+        Debug.Log("JOINED ROOM");
+       // spawnCount++;
     }
 
-    
-	// Update is called once per frame
-	void Update ()
+    public virtual void OnFailedToConnectToPhoton(DisconnectCause cause)
     {
+        Debug.LogError("Cause: " + cause);
+    }
+    // Update is called once per frame
+    void Update ()
+    {
+        if (!PhotonNetwork.connected)
+        {
+            Debug.Log("connecting");
+        }
+        //if connected photon button = useful
+        else
+        {
+            Debug.Log("connected");
+        }
         networkUpdateText.text ="Stat:" + PhotonNetwork.connectionStateDetailed.ToString () +
             " Ping: " + PhotonNetwork.GetPing()+"ms"; 
 	}
 
-    
 }

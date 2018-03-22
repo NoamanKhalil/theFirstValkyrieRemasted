@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerNetworkCs : MonoBehaviour {
 
-    [SerializeField] private GameObject thisPlayerCamera;
+    //[SerializeField] private GameObject thisPlayerCamera;
     [SerializeField] private MonoBehaviour[] playerControlScript;
 
     private PhotonView photonView;
@@ -25,7 +25,7 @@ public class PlayerNetworkCs : MonoBehaviour {
         else
         {
             // disbale its camera
-            thisPlayerCamera.SetActive(false);
+            //thisPlayerCamera.SetActive(false);
             //disable its control scripts 
             foreach (MonoBehaviour m in playerControlScript)
             {

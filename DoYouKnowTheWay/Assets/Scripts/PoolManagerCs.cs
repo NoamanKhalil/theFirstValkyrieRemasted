@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+///PoolManger used to manage  bullet pooling , on Hold 
+
 public class PoolManagerCs : MonoBehaviour {
 
     public GameObject bulletPattern;

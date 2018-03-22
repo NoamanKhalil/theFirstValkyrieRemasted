@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+///Used to test sending data to local host 
+
 public class DatabaseManagerCs : MonoBehaviour {
 
     private string urlRegister;
