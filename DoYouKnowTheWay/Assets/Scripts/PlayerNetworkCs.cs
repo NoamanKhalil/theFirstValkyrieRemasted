@@ -19,7 +19,7 @@ public class PlayerNetworkCs : MonoBehaviour {
     {
         if (photonView.isMine)
         {
-
+        
         }
         // handles fucntionality for non local character
         else

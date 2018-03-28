@@ -36,7 +36,12 @@ public class PhotonNetworkManagerCs : Photon.MonoBehaviour
         PhotonNetwork.ConnectUsingSettings(version);
        myphotonView = GetComponent<PhotonView>();
         myroom = new RoomOptions() { isVisible = true, maxPlayers = 2 };
+        //all players will load the same scene
+        PhotonNetwork.automaticallySyncScene = true;
     }
+
+
+
     public virtual void OnJoinedLobby()
     {
         Debug.Log("Connected to master");
@@ -50,7 +55,7 @@ public class PhotonNetworkManagerCs : Photon.MonoBehaviour
    public void OnJoinedRoom()
     {
         //PhotonNetwork.Instantiate(Player[spawnCount].name, spawnPoints[spawnCount].transform.position, spawnPoints[spawnCount].transform.rotation, 0);
-        PhotonNetwork.Instantiate(Player[PhotonNetwork.player.ID - 1].name, spawnPoints[PhotonNetwork.player.ID - 1].transform.position, spawnPoints[PhotonNetwork.player.ID - 1].transform.rotation, 0);
+        PhotonNetwork.Instantiate(Player[PhotonNetwork.player.ID - 1].name, spawnPoints[PhotonNetwork.player.ID - 1].transform.position, Player[PhotonNetwork.player.ID - 1].transform.rotation, 0);
         Debug.Log("JOINED ROOM");
        // spawnCount++;
     }

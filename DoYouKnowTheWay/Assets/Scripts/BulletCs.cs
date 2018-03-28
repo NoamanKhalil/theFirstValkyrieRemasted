@@ -8,18 +8,23 @@ public class BulletCs : MonoBehaviour {
 
     ///explosion sprite 
     public GameObject CollisionEffect;
-	// Use this for initialization
-	void Start ()
+
+    public bool isOnline;
+    public bool isLocal;
+
+    // Use this for initialization
+    void Start ()
     {
         // destroys bullet after 0,45 seconds 
-       Invoke("DestroyMe",0.45f);
+       Invoke("DestroyMe",1.8f);
 	}
 
     /// TO be invoked when collison is achived 
     private void DestroyMe()
     {
-        Debug.Log("destroy works");
-        this.gameObject.SetActive(false);
+        // Debug.Log("destroy works");
+        //this.gameObject.SetActive(false);
+        Destroy(this.gameObject);
     }
     void OnCollisionEnter2D(Collision2D col)
     {
@@ -31,11 +36,15 @@ public class BulletCs : MonoBehaviour {
         { 
         col.gameObject.GetComponent<EnemyBehaviourCs>().TakeDamage();
         }
+        else if (col.gameObject.tag.Equals("Player") & isOnline || isLocal)
+        {
+            col.gameObject.GetComponent<PlayerBehaviourCs>().TakeDamage();
+        }
 
         ///Disables bullet for pooling 
         this.gameObject.GetComponent<SpriteRenderer>().enabled = false ;
 
         /// Destroys bullet 0.08 seconds after collision 
-       Invoke("DestroyMe", 0.08f);
+       Invoke("DestroyMe", 0.1f);
     }
 }

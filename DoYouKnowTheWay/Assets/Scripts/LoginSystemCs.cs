@@ -18,25 +18,34 @@ public class LoginSystemCs : MonoBehaviour
     public bool UserLoggedIn,SamePass, loginValidated;
     [Header("Login")]
     [SerializeField]
-    private  Text UserNameText, UserPasswordText;
+    private  Text LoginNameText, LoginPasswordText;
     [Header("Register")]
     [SerializeField]
-    private Text EmailText , PasswordText ,PasswordVerifictationText, UserText;
+    private Text EmailText , UserText;
+    [Header("Register Password ")]
+    [SerializeField]
+    private GameObject PasswordTextPlaceHolder, PasswordVerifictationTextPlaceHolder;
+    [SerializeField]
+    private Text PasswordText, PasswordVerifictationText;
+
     [SerializeField]
     private GameObject ConnectingPanel;
 
-    [Header("SQL Table")]
+    [Header("OnScreen error")]
     [SerializeField]
-    private Text updatetxt0;
-
+    private Text[] updatetxt;
     private bool isEmailValid;
 
-    
+    public bool onNetworkCheck = false;
+    public bool isLoggedIn;
     private string key = "CARLOSISBAE";
     private string stufftoEncrypt = "12345";
     public string encryptedString;
+    GameManager gm;
     void  Start()
     {
+        gm = GetComponent<GameManager>();
+        isLoggedIn = false;
        // urlRegister = "http://localhost/Valkyrie/connect.php";
         isEmailValid = false;
         /* loginData = new WWW("http://localhost/Valkyrie/connect.php");
@@ -47,6 +56,17 @@ public class LoginSystemCs : MonoBehaviour
        // encryptedString = MD5.Create(stufftoEncrypt);
         
     }
+
+    public void canNetworkCheck ()
+    {
+        onNetworkCheck = true;
+    }
+
+    public void cannotNetworkCheck()
+    {
+        onNetworkCheck = false;
+    }
+    
     bool myMailCheck (string mystring)
     {
         string str = mystring;
@@ -55,13 +75,13 @@ public class LoginSystemCs : MonoBehaviour
         if (!match.Success || mystring == null || mystring == "")
         {
 
-            updatetxt0.text = "Status :  " + str + "  Is not a Email , please enter a valid email ";
+            updatetxt[1].text = "Status :  " + str + "  Is not a Email , please enter a valid email ";
             return true;
         }
         else if (match.Success)
         {
            
-            updatetxt0.text = "Status :  " + str + "  Is a valid Email ";
+            updatetxt[1].text = "Status :  " + str + "  Is a valid Email ";
             return false;
         }
 
@@ -71,92 +91,116 @@ public class LoginSystemCs : MonoBehaviour
     
 	void Update ()
     {
-        ///Checks if email charcters are legal/ valid 
-        myMailCheck(EmailText.text.ToString());
-
-        /// Condition to check if email is Valid 
-        if (UserPasswordText!= null && PasswordVerifictationText != null)
+        if (isLoggedIn)
         {
-            if (UserPasswordText.text== PasswordVerifictationText.text)
+            gm.isMultiplayerActive();
+        }
+
+
+        if (onNetworkCheck == true)
+        {
+            PasswordText.text = PasswordTextPlaceHolder.GetComponent<InputField>().text;
+            PasswordVerifictationText.text = PasswordVerifictationTextPlaceHolder.GetComponent<InputField>().text;
+            ///Checks if email charcters are legal/ valid 
+            myMailCheck(EmailText.text);
+          //  updatetxt[1].text = EmailText.text + "Is a  " + myMailCheck(EmailText.text +": email ID");
+            //Debug.Log(myMailCheck(EmailText.text));
+            /// Condition to check if email is Valid 
+            if (PasswordText.text != null && PasswordVerifictationText.text != null)
             {
-                SamePass = true;
-                updatetxt0.text = "Hey Gringo , passwords match =) ";
-                return;
-            }
-            else
-            {
-                Debug.Log("Password !=Same");
-                updatetxt0.text = "Hey Gringo , password no match  ";
-                return;
+                if (PasswordText.text == PasswordVerifictationText.text)
+                {
+                    if (PasswordText.text != " " && PasswordVerifictationText.text != " ")
+                    {
+                        SamePass = true;
+                        updatetxt[0].text = "Hey m8 , passwords match =) ";
+                        return;
+                    }
+                }
+                else if (PasswordText.text != PasswordVerifictationText.text)
+                {
+
+                    //Debug.Log("Hey m8, password no match  " + PasswordText.text +"  "+ PasswordVerifictationText.text);
+                    updatetxt[0].text = "Hey m8 , passwords no match  " + PasswordText.text +"  "+ PasswordVerifictationText.text;
+                    return;
+                }
             }
         }
-        else
-         {
-            SamePass = false; 
-        }
+        
 	}
 
-    IEnumerator Register ( )
-    {
-            WWWForm form = new WWWForm();
-            form.AddField("usernamePost", UserText.text.ToString());
-            form.AddField("emailPost", EmailText.text.ToString());
-            form.AddField("passwordPost", PasswordText.text.ToString());
-            WWW www = new WWW(urlRegister, form);
-            updatetxt0.text = "You are registering...........";
-            Debug.Log("Data");
-            yield return www;
-
-        string CreateAccountReturn = www.text;
-        Debug.Log(CreateAccountReturn);
-        // updatetxt0.text = "You are Registered !";
-    }
     public void doRegister  ()
     {
         if (SamePass == true && UserText.text != null && EmailText.text != null)
         {
-        StartCoroutine("Register");
+            StartCoroutine("Register");
+            //Debug.Log("Hey m8, password no match  " + PasswordText.text.ToString() + "  " + PasswordVerifictationText.text.ToString());
         }
         else
         {
-            Debug.Log("Please enter the text properly " );
-            updatetxt0.text = "Please enter all fields correctly ";
+           // Debug.Log("Please enter the text properly " );
+            updatetxt[0].text = "Please enter all fields correctly ";
         }
 
     }
     public void doLogin ()
     {
-        if (UserNameText != null && UserPasswordText != null)
+        if (LoginNameText.text != null && LoginPasswordText.text != null)
         {
             StartCoroutine("Login");
         }
         else
         {
-            Debug.Log("Login was a failure as they are both null");
-            updatetxt0.text = "Login Failed =/";
+            //Debug.Log("Login was a failure as they are both null");
+            updatetxt[1].text = "Login Failed =/";
 
         }
 
     }
+
+    IEnumerator Register()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("usernamePost", UserText.text.ToString());
+        form.AddField("emailPost", EmailText.text.ToString());
+        form.AddField("passwordPost", PasswordText.text.ToString());
+
+        WWW www = new WWW(urlRegister, form);
+        updatetxt[0].text = "You are registering...........";
+       // Debug.Log("Data");
+        yield return www;
+
+        string CreateAccountReturn = www.text;
+        Debug.Log(CreateAccountReturn);
+        updatetxt[1].text = CreateAccountReturn.ToString();
+    }
+
     IEnumerator Login()
     {
-      
-            Debug.Log("Coroutines started ");
             WWWForm form = new WWWForm();
 
-            form.AddField("usernamePost", UserNameText.text.ToString());
-            form.AddField("passwordPost", UserPasswordText.text.ToString());
+            form.AddField("usernamePost", LoginNameText.text.ToString());
+            form.AddField("passwordPost", LoginPasswordText.text.ToString());
             WWW www = new WWW(urlLogin, form);
-     
+             updatetxt[0].text = "You are Loging in ...........";
+             //Debug.Log("Data");
+             yield return www;
 
-            Debug.Log(www.error);
-
+            string LoginAccountReturn = www.text;
+            Debug.Log(LoginAccountReturn);
+            updatetxt[0].text =LoginAccountReturn;
+            
             if (www.text == " Login Success")
             {
-                Debug.Log("Login was a success");
-                updatetxt0.text = "You are logged in !";
+               // Debug.Log("Login was a success");
+                updatetxt[1].text = "You are logged in !";
+                this.gameObject.GetComponent<GameManager>().isMultiplayerActive();
             }
-            yield return www;
+            if (www.error == null)
+            {
+                isLoggedIn = true;
+            }
+            
       
     }
    

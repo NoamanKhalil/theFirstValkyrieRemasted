@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class GameManager : MonoBehaviour
 {
     [Header("Game Settings")]
@@ -11,6 +12,10 @@ public class GameManager : MonoBehaviour
     private bool isLocalMultiplayer;
     [SerializeField]
     private bool isMultiPlayer;
+
+    [Header("Managers")]
+    [SerializeField]
+    private PhotonNetworkManagerCs photonManager;
 
     [Header("UI Canvas")]
     [SerializeField]
@@ -27,7 +32,10 @@ public class GameManager : MonoBehaviour
     private GameObject[] playerPrefabs;
     [SerializeField]
     private GameObject[] spawnPos;
-    private static GameManager instance = null;
+    public static GameManager instance = null;
+
+    [SerializeField]
+    private GameObject[] stuffToDisable;
 
     private void Awake()
     {
@@ -39,9 +47,16 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+
+    public void OnAwake()
+    {
+        photonManager = this.gameObject.GetComponent<PhotonNetworkManagerCs>();
 
         if (isLocalMultiplayer == true)
         {
+            photonManager.enabled = false;
             GameObject[] go = new GameObject[2];
            go [0]=  Instantiate(playerPrefabs[0], spawnPos[0].transform.position, Quaternion.Euler (0,0,90));
             go[0].GetComponent<PhotonView>().OnDestroy();
@@ -51,15 +66,20 @@ public class GameManager : MonoBehaviour
             go[1].GetComponent<PhotonView>().OnDestroy();
             go[1].GetComponent<PlayerNetworkCs>().enabled = false;
             go[1].GetComponent<PhotonTransformView>().enabled = false;
+
+
         }
-
-        #if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX
-        // myCanvas[2].SetActive(true);
-        #endif
-
-        #if UNITY_ANDROID || UNITY_IOS
-
-        #endif
+        else if (isSinglePlayer == true)
+        {
+            photonManager.enabled = false;
+            GameObject go;
+            go= Instantiate(playerPrefabs[1], spawnPos[0].transform.position, Quaternion.Euler(0, 0, 90));
+            go.GetComponent<PhotonView>().OnDestroy();
+            go.GetComponent<PlayerNetworkCs>().enabled = false;
+            go.GetComponent<PhotonTransformView>().enabled = false;
+            stuffToDisable[0].gameObject.SetActive(false);
+            stuffToDisable[1].gameObject.SetActive(false);
+        }
     }
 
     // Use this for initialization
@@ -121,17 +141,27 @@ public class GameManager : MonoBehaviour
         isSinglePlayer = true;
         isLocalMultiplayer = false;
         isMultiPlayer = false;
+        myCanvas[0].SetActive(false);
+        myCanvas[1].SetActive(true);
+        OnAwake();
     }
     public void isMultiplayerActive()
     {
         isSinglePlayer = false;
         isLocalMultiplayer = false;
         isMultiPlayer = true;
+        myCanvas[0].SetActive(false);
+        myCanvas[1].SetActive(true);
+        photonManager.enabled = true;
+        OnAwake();
     }
     public void isLocalMultiplayerActive()
     {
         isSinglePlayer = false;
         isLocalMultiplayer = false;
         isMultiPlayer = true;
+        myCanvas[0].SetActive(false);
+        myCanvas[1].SetActive(true);
+        OnAwake();
     }
 }
