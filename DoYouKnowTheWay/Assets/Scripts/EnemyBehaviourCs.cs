@@ -25,6 +25,11 @@ public class EnemyBehaviourCs : MonoBehaviour
     private void Awake()
     {
         gm = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<GameManager>();
+        // set 0 for multiplayer 
+        if (waveCount == 0)
+        {
+            pathToFollow = GameObject.Find("Pattern3_Pvp").GetComponentsInChildren<Transform>();
+        }
         if (waveCount ==1)
         {
             pathToFollow = GameObject.Find("Pattern0").GetComponentsInChildren<Transform>();
@@ -50,7 +55,7 @@ public class EnemyBehaviourCs : MonoBehaviour
     [PunRPC]
     void Update ()
 	{
-        transform.position = Vector3.MoveTowards(transform.position + axis * Mathf.Sin(Time.time * frequency) * magnitude, pathToFollow[5].position, Time.deltaTime * speed);
+        transform.position = Vector3.MoveTowards(transform.position + axis * Mathf.Sin(Time.time * frequency) * magnitude, pathToFollow[0].position, Time.deltaTime * speed);
 
         if (isEnabled!= true)
         {

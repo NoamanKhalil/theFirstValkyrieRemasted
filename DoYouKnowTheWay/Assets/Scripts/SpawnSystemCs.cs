@@ -12,6 +12,8 @@ public class SpawnSystemCs : MonoBehaviour
     private float waveDelay;
     [SerializeField]
     private int enemyCount;
+    [SerializeField]
+    private float enemyDelay;
 
     [Header("SpawnPoints")]
     [SerializeField]
@@ -25,8 +27,11 @@ public class SpawnSystemCs : MonoBehaviour
     [SerializeField]
     private GameObject[] PathToFollow;
 
+    [SerializeField]
     private bool isMultiplayer;
+    [SerializeField]
     private bool canStart;
+    [SerializeField]
     private int maxEnemyCount;
     private GameManager gm;
     #endregion
@@ -43,53 +48,53 @@ public class SpawnSystemCs : MonoBehaviour
     {
         if (canStart)
         {
-            if (isMultiplayer)
+            enemyDelay -= Time.deltaTime;
+            if (enemyDelay>0)
             {
-                GameObject go;
-                go = Instantiate(enemyPrefabs[0], spawnPoints[Random.Range(0, spawnPoints.Length - 1)]);
-                //go.GetComponent<EnemyBehaviourCs>().SetWaveCount ()
-            }
-            else if (!isMultiplayer)
-            {
-                //10 enemies 
-                if (waveCount == 1 )
+                if (isMultiplayer && enemyCount <= maxEnemyCount)
                 {
-                    if (enemyCount == maxEnemyCount)
-                    {
-                        return;
-                    }
+                    GameObject go;
+                    go = Instantiate(enemyPrefabs[0], spawnPoints[spawnPoints.Length-1]);
+                    go.GetComponent<EnemyBehaviourCs>().SetWaveCount(0);
+                    enemyCount++;
 
-                    for (int i = 1; i <= enemyCount; i++)
+                    if (enemyCount >= maxEnemyCount)
                     {
-                        GameObject go;
-                        go = Instantiate(enemyPrefabs[0], spawnPoints[Random.Range(0, spawnPoints.Length - 1)]);
-                        go.GetComponent<EnemyBehaviourCs>().SetWaveCount(waveCount);
-                        enemyCount++;
-                    }
-                    if (enemyCount == maxEnemyCount)
-                    {
-                        waveCount++;
+                        //waveCount++;
                         maxEnemyCount += 10;
                         Debug.Log("WaveOver");
                     }
+                   // enemyDelay = 2f;
+                    //go.GetComponent<EnemyBehaviourCs>().SetWaveCount ()
+                }
+                else if (!isMultiplayer)
+                {
+                    //10 enemies 
+                    if (waveCount == 1)
+                    {
+                        if (enemyCount == maxEnemyCount)
+                        {
+                            return;
+                        }
+
+                        for (int i = 1; i <= enemyCount; i++)
+                        {
+                            GameObject go;
+                            go = Instantiate(enemyPrefabs[0], spawnPoints[Random.Range(0, spawnPoints.Length - 1)]);
+                            go.GetComponent<EnemyBehaviourCs>().SetWaveCount(waveCount);
+                            enemyCount++;
+                        }
+                        if (enemyCount == maxEnemyCount)
+                        {
+                            waveCount++;
+                            maxEnemyCount += 10;
+                            Debug.Log("WaveOver");
+                        }
+
+                    }
 
                 }
-                //20 enemies 
-                /*else if (waveCount == 2 )
-                {
-                    Transform[] tempTransformArray = PathToFollow[1].GetComponentsInChildren<Transform>();
-                    GameObject go;
-                    go = Instantiate(enemyPrefabs[waveCount], spawnPoints[Random.Range(0, spawnPoints.Length - 1)]);
-                    go.GetComponent<EnemyBehaviourCs>().SetWaveCount(waveCount);
-                }
-                //30 enemies 
-                else if (waveCount == 3)
-                {
-                    Transform[] tempTransformArray = PathToFollow[2].GetComponentsInChildren<Transform>();
-                    GameObject go;
-                    go = Instantiate(enemyPrefabs[waveCount], spawnPoints[Random.Range(0, spawnPoints.Length - 1)]);
-                    go.GetComponent<EnemyBehaviourCs>().SetWaveCount(waveCount);
-                }*/
+
             }
         }
     
