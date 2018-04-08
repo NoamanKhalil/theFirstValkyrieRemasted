@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerNetworkCs : MonoBehaviour {
 
     //[SerializeField] private GameObject thisPlayerCamera;
-    [SerializeField] private MonoBehaviour[] playerControlScript;
+    [SerializeField] private PlayerBehaviourCs playerControlScript;
 
     private PhotonView photonView;
     // Use this for initialization
@@ -13,6 +13,7 @@ public class PlayerNetworkCs : MonoBehaviour {
     {
         // faster than using photon.monobehaviour
         photonView = GetComponent<PhotonView>();
+        playerControlScript = GetComponent<PlayerBehaviourCs>();
         Initilaze();
 	}
 	void Initilaze ()
@@ -27,10 +28,8 @@ public class PlayerNetworkCs : MonoBehaviour {
             // disbale its camera
             //thisPlayerCamera.SetActive(false);
             //disable its control scripts 
-            foreach (MonoBehaviour m in playerControlScript)
-            {
-                m.enabled = false;
-            }
+                playerControlScript.enabled = false;
+          
         }
 	}
 

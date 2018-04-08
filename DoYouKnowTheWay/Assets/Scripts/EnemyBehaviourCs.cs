@@ -18,15 +18,33 @@ public class EnemyBehaviourCs : MonoBehaviour
     public Vector3 axis;
     GameManager gm;
 
-    public bool isOffline;
+    private bool isOffline;
     private bool isOnline;
+    private int waveCount; 
     // Use this for initialization
     private void Awake()
     {
         gm = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<GameManager>();
-       // isOffline = gm.isSinglePlayerCheck();
-       // isOnline = gm.isMultiplayerCheck();
+        if (waveCount ==1)
+        {
+            pathToFollow = GameObject.Find("Pattern0").GetComponentsInChildren<Transform>();
+        }
+        else if (waveCount == 2)
+        {
+            pathToFollow = GameObject.Find("Pattern1").GetComponentsInChildren<Transform>();
+        }
+        else if (waveCount == 3)
+        {
+            pathToFollow = GameObject.Find("Pattern3").GetComponentsInChildren<Transform>();
+        }
+        // isOffline = gm.isSinglePlayerCheck();
+        // isOnline = gm.isMultiplayerCheck();
         myPhotonView = GetComponent<PhotonView>();
+    }
+
+    public void SetWaveCount (int wave)
+    {
+        waveCount = wave;
     }
 
     [PunRPC]

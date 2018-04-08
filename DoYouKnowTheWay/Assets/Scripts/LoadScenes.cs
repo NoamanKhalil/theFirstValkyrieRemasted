@@ -8,7 +8,7 @@ public class LoadScenes : MonoBehaviour
 {
 	// Use this for initialization
 
-	public void Score (string str)
+	public void LoadScene (string str)
 	{
 		SceneManager.LoadSceneAsync (str);
 	}

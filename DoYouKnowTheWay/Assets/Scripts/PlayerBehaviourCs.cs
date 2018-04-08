@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class PlayerBehaviourCs : MonoBehaviour
+using Photon;
+
+public class PlayerBehaviourCs :PunBehaviour
 {
-    [Header("projectile prefab")]
-    [SerializeField]
-    public GameObject[] projectile;
+    #region Public variables implementation
 
-    [Header("Positons to Clamp ")]
-    [SerializeField]
-    public GameObject[] clampPoints;
 
-    public GameObject health;
+    //public GameObject health;
     public GameObject Shield;
     public Transform[] firePos;
     public bool OnController;
@@ -23,6 +20,22 @@ public class PlayerBehaviourCs : MonoBehaviour
     public bool isPlayerOne;
     public int shotsToDie;
     public GameManager gm;
+
+    #endregion
+
+    #region private serilaized variables implementation
+
+    [Header("projectile prefab")]
+    [SerializeField]
+    private GameObject[] projectile;
+
+    [Header("Positons to Clamp ")]
+    [SerializeField]
+    private GameObject[] clampPoints;
+
+    #endregion
+
+    #region private  variables implementation
     private Vector2 movement;
 
     // to check current game mode
@@ -32,9 +45,10 @@ public class PlayerBehaviourCs : MonoBehaviour
 
 
     private PhotonView myPhotonView;
+    [SerializeField]
     private int attackLevel;
     private int ProjectilePrefab;
-
+    //private AudioSource aud; 
 
     // for powerups 
     private bool onSpeed;
@@ -42,14 +56,21 @@ public class PlayerBehaviourCs : MonoBehaviour
     private bool onShield;
     private float tempShotReset = 0.5f;
 
+    public bool isControllable;
     //for smooth movement 
     Vector3 targetPos;
+    float h, v;
 
+    #endregion
+
+
+    #region  MonoBehaviour CallBacks
     // Use this for initialization
     void Awake()
     {
         clampPoints[0] = GameObject.Find("ClampPosY0");
         clampPoints[1] = GameObject.Find("ClampPosY");
+        //aud = GetComponent<AudioSource>();
        /* if (isPlayerOne)
         {
 
@@ -61,7 +82,7 @@ public class PlayerBehaviourCs : MonoBehaviour
         }*/
 
         PhotonNetwork.sendRate = 20;
-        PhotonNetwork.sendRateOnSerialize = 20;
+        PhotonNetwork.sendRateOnSerialize = 10;
         ProjectilePrefab = 0;
         attackLevel = 0;
 
@@ -73,37 +94,47 @@ public class PlayerBehaviourCs : MonoBehaviour
         isMultiplayerActive = gm.isMultiplayerCheck();
         isLocalMultiplayerActive = gm.isLocalMultiplayerCheck();
 
-        if (isPlayerOne )
+        /*if (isPlayerOne )
         {
-            health = GameObject.Find("Player_txt") ;
+
+            health = GameObject.Find("Player0_txt");
         } 
-        else if (isMultiplayerActive)
+        else if (isMultiplayerActive&& isPlayerOne)
         {
-            health = GameObject.Find("Player_txt");
+            //health = GameObject.Find("Player_txt");
+            health = GameObject.Find("Player0_txt");
         }
         else
         {
-            health = GameObject.Find("Player0_txt");
-        }
+            health = GameObject.Find("Player_txt");
+        }*/
 
     }
     void Start()
     {
+        if (myPhotonView.isMine)
+        {
+            canControl();
+        }
+        // handles fucntionality for non local character
+        else
+        {
+            //disable its control 
+            cannotControl();
+        }
 
     }
-    [PunRPC]
     void Update()
     {
-        health.GetComponent<Text>().text = ": " + shotsToDie;
-        bool idk = true;
+         //health.GetComponent<Text>().text = ": " + shotsToDie;
         shotReset -= Time.deltaTime;
         Movement();
         if (shotReset < 0)
-        { 
+        {
             // fire works differently in photon 
-            if (isMultiplayerActive )
+            if (isMultiplayerActive&& myPhotonView.isMine)
             {
-                GetComponent<PhotonView>().RPC("FirePro", PhotonTargets.All);
+                FireProjectile0();
             }
             else if (isSinglePlayerActive || isLocalMultiplayerActive)
             {
@@ -120,8 +151,201 @@ public class PlayerBehaviourCs : MonoBehaviour
             speed = 1.0f;
         }
 
+        if (shotsToDie <= 0)
+        {
+            if (!myPhotonView.isMine)
+            {
+                return;
+            }
+            win();
+        
+           
+        }
     }
 
+    #endregion
+
+
+    #region Public  Methods
+
+    [PunRPC]
+    public void cannotControl()
+    {
+        isControllable = false;
+    }
+    [PunRPC]
+    public void canControl()
+    {
+        isControllable = true;
+    }
+
+    [PunRPC]
+    public void TakeDamage()
+    {
+        shotsToDie--;
+    }
+    [PunRPC]
+    public void EnableCollider()
+    {
+        this.gameObject.GetComponent<Collider2D>().enabled = true;
+    }
+    [PunRPC]
+    public void powerUp(string power, string color)
+    {
+        if (color == "Green")
+        {
+            attackLevel = 0;
+            ProjectilePrefab = 1;
+
+        }
+        else if (color == "Blue")
+        {
+            attackLevel = 0;
+            ProjectilePrefab = 0;
+        }
+        else if (color == "Red")
+        {
+            attackLevel = 0;
+            ProjectilePrefab = 2;
+        }
+
+        if (power == "Speed")
+        {
+            onSpeed = true;
+        }
+        else if (power == "Shield")
+        {
+            this.gameObject.GetComponent<Collider2D>().enabled = false;
+            Shield.SetActive(true);
+            //invoke to break shield 
+        }
+        else if (power == "Attack")
+        {
+            attackLevel++;
+        }
+        else if (power == "Health")
+        {
+            shotsToDie++;
+        }
+
+    }
+
+    #endregion
+
+    #region Private  Methods
+    void win ()
+    {
+        
+        if (shotsToDie <= 0 && myPhotonView.isMine)
+        {
+            PhotonNetwork.Disconnect();
+            gm.OnPlayerDie();
+            Destroy(this.gameObject);
+        }
+        else 
+        {
+            PhotonNetwork.Disconnect();
+            gm.OnplayerWin();
+            Destroy(this.gameObject);
+        }
+    }
+
+    void FireProjectile0()
+    {
+        myPhotonView.RPC("FireProjectile", PhotonTargets.All);
+    }
+
+    [PunRPC]
+    void FireProjectile()
+    {
+       if  (Input.GetAxis("Fire4") != 0 && !isPlayerOne)
+        {
+           GameObject bPrefab = PhotonNetwork.Instantiate(projectile[ProjectilePrefab].name, firePos[0].position, Quaternion.Euler(0, 0, -90),0) as GameObject;
+           bPrefab.GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500);
+            shotReset = 0.5f;
+
+        }
+        else if (Input.GetAxis("Fire5") != 0 && isPlayerOne )
+        {
+            GameObject bPrefab = PhotonNetwork.Instantiate (projectile[ProjectilePrefab].name, firePos[0].position, Quaternion.Euler(0, 0, 90) ,0) as GameObject;
+           bPrefab.GetComponent<Rigidbody2D>().AddForce(Vector3.left* 500);
+            shotReset = 0.5f;
+        }
+    }
+    [PunRPC ]
+    void FirePro()
+    {
+       
+        if (Input.GetAxis("Fire4") != 0 && !isPlayerOne )
+        {
+                Debug.Log("PEw PEW");
+                GameObject[] clone = new GameObject [3];
+                //clone= Instantiate(projectile, firePos[0].position, transform.rotation) as Rigidbody;
+                if (attackLevel ==0)
+                {
+                    clone[0] = Instantiate(projectile[ProjectilePrefab], firePos[0].position, Quaternion.Euler(0, 0, -90)) as GameObject;
+                    clone[0].GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500, ForceMode2D.Force);
+                   // aud.Play();
+                shotReset = 0.5f;
+                }
+                else if (attackLevel ==1 )
+                {
+                    for (int i = 1; i < 3; i++)
+                    {
+                    clone[i] = Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, -90)) as GameObject;
+                    clone[i].GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500, ForceMode2D.Force);
+                   // aud.Play();
+                    shotReset = 0.5f;
+                    }
+                }
+                else if (attackLevel == 2)
+                {
+                    for (int i =0; i <3 ; i++)
+                    {
+                    clone [i]= Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, -90)) as GameObject;
+                    clone[i].GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500, ForceMode2D.Force);
+                    //aud.Play();
+                    shotReset = 0.5f;
+                    }
+                }
+ 
+        }
+            else if (Input.GetAxis("Fire5")!=0 &&isPlayerOne == true)
+            {
+                Debug.Log("BEw BEW");
+                GameObject[] clone = new GameObject[3];
+                //clone= Instantiate(projectile, firePos[0].position, transform.rotation) as Rigidbody;
+                if (attackLevel == 0)
+                {
+                clone[0] = Instantiate(projectile[ProjectilePrefab], firePos[0].position, Quaternion.Euler(0, 0, 90)) as GameObject ;
+                clone[0].GetComponent<Rigidbody2D>().AddForce(Vector3.left * 500, ForceMode2D.Force);
+                //aud.Play();
+                shotReset = 0.5f;
+            }
+                else if (attackLevel == 1)
+                {
+                    for (int i = 1; i < 3; i++)
+                    {
+                    clone[i] = Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, 90)) as GameObject;
+                    clone[i].GetComponent<Rigidbody2D>().AddForce(Vector3.left * 500, ForceMode2D.Force);
+                    //aud.Play();
+                    shotReset = 0.5f;
+                }
+                }
+                else if (attackLevel == 2)
+                {
+                for (int i = 0; i < 3; i++)
+                {
+                    clone[i] = Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, 90)) as GameObject;
+                    clone[i].GetComponent<Rigidbody2D>().AddForce(Vector3.left * 500, ForceMode2D.Force);
+                    //aud.Play();
+                    shotReset = 0.5f;
+                }
+       
+            }
+        }
+    }
+    [PunRPC]
     // Metod to control the movement of the player 
     void Movement()
     {
@@ -132,19 +356,19 @@ public class PlayerBehaviourCs : MonoBehaviour
         // sets the y clamp to the players position using rigidbody as it uses physics to move (rigidbody.addforce)
         rb.position = pos;
         // temporary varibles used for hoizontal and vertical movement 
-        float h, v;
+
         // conditions to check if its player one or not and use different input axises in the same script 
         if (isPlayerOne == true)
         {
-            h = Input.GetAxis("Horizontal") * speed ;
+            h = Input.GetAxis("Horizontal") * speed;
             v = Input.GetAxis("Vertical") * speed;
             //Debug.Log("H " + h + "V= " + v);
         }
-        else 
+        else if (!isPlayerOne)
         {
             h = Input.GetAxis("Horizontal0") * speed;
             v = Input.GetAxis("Vertical0") * speed;
-           // Debug.Log("H " + h  +"V= "+ v);
+            // Debug.Log("H " + h  +"V= "+ v);
         }
         // calculates the amount to move on x and y however x is clamped 
         movement = new Vector2(h, v);
@@ -156,125 +380,7 @@ public class PlayerBehaviourCs : MonoBehaviour
         //adds the movemnt force 
         rb.AddForce(movement);
     }
-
     [PunRPC]
-    void FireProjectile()
-    {
-        GameObject bPrefab = Instantiate(projectile[ProjectilePrefab], firePos[0].position, Quaternion.Euler(0, 0, 90)) as GameObject;
-        bPrefab.GetComponent<Rigidbody2D>().AddForce(Vector3.left * 500, ForceMode2D.Force);
-        shotReset = 0.5f;
-    }
-    [PunRPC ]
-    void FirePro()
-    {
-            if (Input.GetAxis("Fire4") != 0 && !isPlayerOne )
-            {
-                Debug.Log("PEw PEW");
-                GameObject[] clone = new GameObject [3];
-                //clone= Instantiate(projectile, firePos[0].position, transform.rotation) as Rigidbody;
-                if (attackLevel ==0)
-                {
-                    clone[0] = Instantiate(projectile[ProjectilePrefab], firePos[0].position, Quaternion.Euler(0, 0, -90)) as GameObject;
-                    clone[0].GetComponent<Rigidbody2D>().AddForce(Vector2.right * 500);
-                    shotReset = 0.5f;
-            }
-                else if (attackLevel ==1 )
-                {
-                    for (int i = 1; i < 3; i++)
-                    {
-                    clone[i] = Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, -90)) as GameObject;
-                    clone[i].GetComponent<Rigidbody2D>().AddForce(Vector2.right * 500);
-                    shotReset = 0.5f;
-                }
-                }
-                else if (attackLevel == 2)
-                {
-                    for (int i =0; i <3 ; i++)
-                    {
-                        clone [i]= Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, -90)) as GameObject;
-                        clone[i].GetComponent<Rigidbody2D>().AddForce(Vector2.right * 500);
-                    shotReset = 0.5f;
-                }
-                }
- 
-        }
-            else if (Input.GetAxis("Fire5")!=0 &&isPlayerOne == true)
-            {
-                Debug.Log("BEw BEW");
-                GameObject[] clone = new GameObject[3];
-                //clone= Instantiate(projectile, firePos[0].position, transform.rotation) as Rigidbody;
-                if (attackLevel == 0)
-                {
-                    clone[0] = Instantiate(projectile[ProjectilePrefab], firePos[0].position, Quaternion.Euler(0, 0, 90)) as GameObject ;
-                    clone[0].GetComponent<Rigidbody2D>().AddForce(Vector2.left * 500, ForceMode2D.Force);
-                    shotReset = 0.5f;
-            }
-                else if (attackLevel == 1)
-                {
-                    for (int i = 1; i < 3; i++)
-                    {
-                        clone[i] = Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, 90)) as GameObject;
-                        clone[i].GetComponent<Rigidbody2D>().AddForce(Vector2.left * 500, ForceMode2D.Force);
-                    shotReset = 0.5f;
-                }
-                }
-                else if (attackLevel == 2)
-                {
-                for (int i = 0; i < 3; i++)
-                {
-                    clone[i] = Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, 90)) as GameObject;
-                    clone[i].GetComponent<Rigidbody2D>().AddForce(Vector2.left * 500, ForceMode2D.Force);
-                    shotReset = 0.5f;
-                }
-       
-            }
-        }
-    }
-
-    public void TakeDamage()
-    {
-        shotsToDie--; 
-    }
-
-    public void powerUp(string power , string color)
-    {
-        if (color == "Green")
-        {
-            attackLevel = 0;
-            ProjectilePrefab = 1;
-            
-        }
-        else if (color =="Blue")
-        {
-            attackLevel = 0;
-            ProjectilePrefab = 0;
-        }
-        else if (color == "Red")
-        {
-            attackLevel = 0;
-            ProjectilePrefab = 2;
-        }
-        
-        if (power == "Speed")
-        {
-            onSpeed = true;
-        }
-        else if (power == "Shield")
-        {
-            this.gameObject.GetComponent<Collider2D>().enabled = false;
-            Shield.SetActive(true);
-            //invoke to break shield 
-        }
-        else if (power =="Attack")
-        {
-            attackLevel++;
-        }
-        else if (power == "Health")
-        {
-            shotsToDie++;
-        }
-
-    }
     void OnCollisionEnter2D(Collision2D col)
     {
         if (col.gameObject.tag.Equals("Enemy"))
@@ -283,19 +389,24 @@ public class PlayerBehaviourCs : MonoBehaviour
         }
 
     }
-
+    [PunRPC]
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.isWriting)
         {
-            stream.SendNext(shotsToDie);
+           // stream.SendNext(shotsToDie);
             stream.SendNext(transform.position);
+           // stream.SendNext(health.GetComponent<Text>().text);
            // stream.SendNext ()
         }
         else
         {
-            shotsToDie=(int)stream.ReceiveNext();
+           // shotsToDie=(int)stream.ReceiveNext();
             targetPos = (Vector3)stream.ReceiveNext();
+          //  health.GetComponent<Text>().text = (string)stream.ReceiveNext();
         }
     }
+
+
+    #endregion
 }

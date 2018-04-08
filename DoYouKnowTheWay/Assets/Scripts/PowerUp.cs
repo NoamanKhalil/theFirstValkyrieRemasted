@@ -24,11 +24,12 @@ public class PowerUp : MonoBehaviour {
     private  Power pow;
     [SerializeField]
     private Colors col;
-    bool isActive;
-
+    bool isActive = true;
+    public Vector3 MovePos;
     private void Update()
     {
-         if (isActive != true)
+        transform.position = Vector3.MoveTowards(transform.position, ( transform.position+ MovePos), Time.deltaTime);
+        if (isActive != true)
         {
             Destroy(this.gameObject);
         }
@@ -44,9 +45,14 @@ public class PowerUp : MonoBehaviour {
         }
         else if (col.gameObject.tag.Equals("PlayerProjectile"))
         {
-            col.gameObject.GetComponent<PlayerBehaviourCs>().gm.GetComponent<GameManager>().addScore(50, "0");
+            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<GameManager>().addScore(50, "0");
             isActive = false;
         }
+        else
+        {
+            isActive = false;
+        }
+
     }
     void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

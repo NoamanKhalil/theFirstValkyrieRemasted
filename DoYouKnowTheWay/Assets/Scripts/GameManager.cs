@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    #region Game Settings
     [Header("Game Settings")]
     [SerializeField]
     private bool isSinglePlayer;
@@ -12,32 +13,44 @@ public class GameManager : MonoBehaviour
     private bool isLocalMultiplayer;
     [SerializeField]
     private bool isMultiPlayer;
+    #endregion
 
+    #region Managers 
     [Header("Managers")]
     [SerializeField]
     private PhotonNetworkManagerCs photonManager;
+    #endregion
 
+    #region Ui Stuff 
     [Header("UI Canvas")]
     [SerializeField]
     GameObject[] myCanvas;
+    #endregion
 
+    #region Score Stuff 
     [Header("Score")]
     [SerializeField]
     float playerScore, playerScore0;
     [SerializeField]
     Text[] playerScoreTxt;
+    #endregion
 
+    #region Player objects 
     [Header("PlayerObjects")]
     [SerializeField]
     private GameObject[] playerPrefabs;
     [SerializeField]
     private GameObject[] spawnPos;
     public static GameManager instance = null;
+    #endregion
+
 
     [SerializeField]
     private GameObject[] stuffToDisable;
 
-    private void Awake()
+
+    #region MonoBehaviour CallBacks 
+    void Awake()
     {
         if (instance == null && instance != this)
         {
@@ -48,8 +61,36 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+    void Start()
+    {
+        playerScore = 0;
+        playerScore0 = 0;
+    }
+    void Update()
+    {
+        playerScoreTxt[0].text = "Score: " + playerScore.ToString();
+        playerScoreTxt[1].text = "Score: " + playerScore0.ToString();
+        // playerScore.text = ":" + player;	
+        if (isSinglePlayer == true)
+        {
+            isLocalMultiplayer = false;
+            isMultiPlayer = false;
+        }
+        if (isLocalMultiplayer == true)
+        {
+            isSinglePlayer = false;
+            isMultiPlayer = false;
+        }
+        if (isMultiPlayer == true)
+        {
+            isSinglePlayer = false;
+            isLocalMultiplayer = false;
+        }
+    }
+    #endregion
 
 
+    #region Public Mathods
     public void OnAwake()
     {
         photonManager = this.gameObject.GetComponent<PhotonNetworkManagerCs>();
@@ -75,7 +116,7 @@ public class GameManager : MonoBehaviour
             GameObject go;
             go= Instantiate(playerPrefabs[1], spawnPos[0].transform.position, Quaternion.Euler(0, 0, 90));
             go.GetComponent<PhotonView>().OnDestroy();
-            go.GetComponent<PlayerNetworkCs>().enabled = false;
+           go.GetComponent<PlayerNetworkCs>().enabled = false;
             go.GetComponent<PhotonTransformView>().enabled = false;
             stuffToDisable[0].gameObject.SetActive(false);
             stuffToDisable[1].gameObject.SetActive(false);
@@ -83,34 +124,21 @@ public class GameManager : MonoBehaviour
     }
 
     // Use this for initialization
-    void Start()
-    {
-        playerScore = 0;
-        playerScore0 = 0;
-    }
 
-    // Update is called once per frame
-    void Update()
+
+    public void OnPlayerDie ()
     {
-        playerScoreTxt[0].text ="Score: " + playerScore.ToString ();
-        playerScoreTxt[1].text ="Score: " + playerScore0.ToString();
-        // playerScore.text = ":" + player;	
-        if (isSinglePlayer == true)
-        {
-            isLocalMultiplayer = false;
-            isMultiPlayer = false;
-        }
-        if (isLocalMultiplayer == true)
-        {
-            isSinglePlayer = false;
-            isMultiPlayer = false;
-        }
-        if (isMultiPlayer == true)
-        {
-            isSinglePlayer = false;
-            isLocalMultiplayer = false;
-        }
+        myCanvas[1].SetActive(false);
+        myCanvas[2].SetActive(true);
+
     }
+    public void OnplayerWin()
+    {
+        myCanvas[1].SetActive(false);
+        myCanvas[3].SetActive(true);
+    }
+    // Update is called once per frame
+
     /// used to add score based on who killed the enemy 
     public void addScore(float score ,string  playerName)
     {
@@ -164,4 +192,5 @@ public class GameManager : MonoBehaviour
         myCanvas[1].SetActive(true);
         OnAwake();
     }
+    #endregion
 }
