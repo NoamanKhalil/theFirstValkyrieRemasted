@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon;
-using System.Threading;
-using UnityEngine.UI;
 ///  Network manager
 
 public class PhotonNetworkManagerCs : Photon.MonoBehaviour
@@ -42,6 +40,20 @@ public class PhotonNetworkManagerCs : Photon.MonoBehaviour
         myroom = new RoomOptions() { isVisible = true, maxPlayers = 2 };
         //all players will load the same scene
         //PhotonNetwork.automaticallySyncScene = true;
+    }
+
+    public bool CheckMyRoom()
+    {
+        if (PhotonNetwork.countOfPlayers == myroom.MaxPlayers)
+        {
+            Debug.Log("true");
+            return true;
+        }
+        else
+        {
+            Debug.Log("false");
+            return false;
+        }
     }
 
     // creates lobby 

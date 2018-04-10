@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [Header("Managers")]
     [SerializeField]
     private PhotonNetworkManagerCs photonManager;
+    public SpawnSystemCs spawnSystem;
     #endregion
 
     #region Ui Stuff 
@@ -42,11 +43,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject[] spawnPos;
     public static GameManager instance = null;
-    #endregion
-
-
     [SerializeField]
     private GameObject[] stuffToDisable;
+    #endregion
 
 
     #region MonoBehaviour CallBacks 
@@ -60,6 +59,9 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
+        photonManager = GetComponent<PhotonNetworkManagerCs>();
+        spawnSystem = GetComponent<SpawnSystemCs>();
     }
     void Start()
     {

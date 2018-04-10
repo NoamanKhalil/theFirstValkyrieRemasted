@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class SpawnSystemCs : MonoBehaviour
 {
     #region Game Settings
@@ -14,6 +14,8 @@ public class SpawnSystemCs : MonoBehaviour
     private int enemyCount;
     [SerializeField]
     private float enemyDelay;
+    [SerializeField]
+    private Text myWaveCount;
 
     [Header("SpawnPoints")]
     [SerializeField]
@@ -31,31 +33,36 @@ public class SpawnSystemCs : MonoBehaviour
     private bool isMultiplayer;
     [SerializeField]
     private bool canStart;
+    private bool arePlayersConnected;
     [SerializeField]
     private int maxEnemyCount;
     private GameManager gm;
+    private PhotonNetworkManagerCs pm;
+    private int playerCount;
     #endregion
 
     // Use this for initialization
     void Start ()
     {
 		gm = GetComponent<GameManager>();
+        pm = GetComponent<PhotonNetworkManagerCs>();
         maxEnemyCount = 10;
     }
 
     // Update is called once per frame
     void Update()
     {
+        myWaveCount.text = "Wave :" +waveCount + "/3";
         if (canStart)
         {
             enemyDelay -= Time.deltaTime;
-            if (enemyDelay>0)
+            if (enemyDelay <= 0 )
             {
-                if (isMultiplayer && enemyCount <= maxEnemyCount)
+                //&& playerCount == 2
+                if (isMultiplayer && enemyCount <= maxEnemyCount && playerCount == 2 && enemyCount <= 2)
                 {
-                    GameObject go;
-                    go = Instantiate(enemyPrefabs[0], spawnPoints[spawnPoints.Length-1]);
-                    go.GetComponent<EnemyBehaviourCs>().SetWaveCount(0);
+                    Instantiate(enemyPrefabs[0], spawnPoints[4].position, Quaternion.Euler (0,0,-90));
+                    Instantiate(enemyPrefabs[1], spawnPoints[3].position , Quaternion.Euler (0,0,90));
                     enemyCount++;
 
                     if (enemyCount >= maxEnemyCount)
@@ -64,7 +71,7 @@ public class SpawnSystemCs : MonoBehaviour
                         maxEnemyCount += 10;
                         Debug.Log("WaveOver");
                     }
-                   // enemyDelay = 2f;
+                    enemyDelay = 4f;
                     //go.GetComponent<EnemyBehaviourCs>().SetWaveCount ()
                 }
                 else if (!isMultiplayer)
@@ -72,24 +79,34 @@ public class SpawnSystemCs : MonoBehaviour
                     //10 enemies 
                     if (waveCount == 1)
                     {
-                        if (enemyCount == maxEnemyCount)
+                        if (enemyCount >= maxEnemyCount)
                         {
                             return;
                         }
 
-                        for (int i = 1; i <= enemyCount; i++)
-                        {
+                       if ( enemyCount <= maxEnemyCount )
+                        { 
                             GameObject go;
-                            go = Instantiate(enemyPrefabs[0], spawnPoints[Random.Range(0, spawnPoints.Length - 1)]);
-                            go.GetComponent<EnemyBehaviourCs>().SetWaveCount(waveCount);
+                            go = Instantiate(enemyPrefabs[2], spawnPoints[Random.Range(0, spawnPoints.Length - 2)]);
+                            go.GetComponent<EnemyBehaviourCs>().waveCount = 1;
                             enemyCount++;
+                            enemyDelay = 6f;
                         }
-                        if (enemyCount == maxEnemyCount)
+                        if (enemyCount >= maxEnemyCount)
                         {
                             waveCount++;
-                            maxEnemyCount += 10;
+                            //maxEnemyCount += 5;
                             Debug.Log("WaveOver");
                         }
+                       
+
+                    }
+                    else if (waveCount ==2 )
+                    {
+                        Debug.Log("Wave 2 reached ");
+                    }
+                    else if (waveCount==3)
+                    {
 
                     }
 
@@ -97,9 +114,7 @@ public class SpawnSystemCs : MonoBehaviour
 
             }
         }
-    
-	}
-
+    }
     public void isMultiplayerSet()
     {
         isMultiplayer = true;
@@ -111,5 +126,9 @@ public class SpawnSystemCs : MonoBehaviour
         isMultiplayer = false;
         canStart = true;
         Debug.Log("!Multplayer set in spawn");
+    }
+    public void PlayerCountIncrease ()
+    {
+        playerCount++;
     }
 }

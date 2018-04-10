@@ -20,6 +20,7 @@ public class PlayerBehaviourCs :PunBehaviour
     public bool isPlayerOne;
     public int shotsToDie;
     public GameManager gm;
+    public AudioSource aud;
 
     #endregion
 
@@ -70,7 +71,7 @@ public class PlayerBehaviourCs :PunBehaviour
     {
         clampPoints[0] = GameObject.Find("ClampPosY0");
         clampPoints[1] = GameObject.Find("ClampPosY");
-        //aud = GetComponent<AudioSource>();
+        aud = GetComponent<AudioSource>();
        /* if (isPlayerOne)
         {
 
@@ -90,6 +91,7 @@ public class PlayerBehaviourCs :PunBehaviour
         
         rb = GetComponent<Rigidbody2D>();
         gm = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<GameManager>();
+        gm.spawnSystem.PlayerCountIncrease();
         isSinglePlayerActive = gm.isSinglePlayerCheck();
         isMultiplayerActive = gm.isMultiplayerCheck();
         isLocalMultiplayerActive = gm.isLocalMultiplayerCheck();
@@ -236,13 +238,13 @@ public class PlayerBehaviourCs :PunBehaviour
     void win ()
     {
         
-        if (shotsToDie <= 0 && myPhotonView.isMine)
+        if (shotsToDie < 0 && myPhotonView.isMine)
         {
             PhotonNetwork.Disconnect();
             gm.OnPlayerDie();
             Destroy(this.gameObject);
         }
-        else 
+        else if (shotsToDie > 0 && myPhotonView.isMine)
         {
             PhotonNetwork.Disconnect();
             gm.OnplayerWin();
@@ -285,7 +287,7 @@ public class PlayerBehaviourCs :PunBehaviour
                 {
                     clone[0] = Instantiate(projectile[ProjectilePrefab], firePos[0].position, Quaternion.Euler(0, 0, -90)) as GameObject;
                     clone[0].GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500, ForceMode2D.Force);
-                   // aud.Play();
+                    aud.Play();
                 shotReset = 0.5f;
                 }
                 else if (attackLevel ==1 )

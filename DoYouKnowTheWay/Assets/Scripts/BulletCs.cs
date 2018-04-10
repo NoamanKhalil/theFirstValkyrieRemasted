@@ -1,14 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Photon;
 /// Bullet sctipt controls bullets behaviour 
 
-public class BulletCs : MonoBehaviour
+public class BulletCs : PunBehaviour
 {
 
     ///explosion sprite 
     public GameObject CollisionEffect;
+    public PhotonView pw;
 
     public bool isOnline;
     public bool isLocal;
@@ -16,6 +17,7 @@ public class BulletCs : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        pw = GetComponent<PhotonView>();
         // destroys bullet after 0,45 seconds 
         Invoke("DestroyMe", 1.8f);
     }
@@ -36,10 +38,12 @@ public class BulletCs : MonoBehaviour
         if (col.gameObject.tag.Equals("Enemy"))
         {
             col.gameObject.GetComponent<EnemyBehaviourCs>().TakeDamage();
+            //PhotonNetwork.Destroy();
         }
         else if (col.gameObject.tag.Equals("Player"))
         {
             col.gameObject.GetComponent<HealthCs>().TakeDamage();
+            //PhotonNetwork.Destroy();
         }
         else if (col.gameObject.tag.Equals("Shield"))
         {

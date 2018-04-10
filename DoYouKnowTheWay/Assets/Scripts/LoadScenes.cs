@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class LoadScenes : MonoBehaviour
 {
-	// Use this for initialization
-
+    // Use this for initialization
+    bool mytimeScale = false;
 	public void LoadScene (string str)
 	{
 		SceneManager.LoadSceneAsync (str);
@@ -17,5 +17,18 @@ public class LoadScenes : MonoBehaviour
 	{
 		Application.Quit();
 	}
+
+    public void pause ()
+    {
+        if (mytimeScale == true)
+        {
+            Time.timeScale = 1;
+        }
+        if (mytimeScale ==false)
+        {
+            Time.timeScale = 0;
+        }
+        
+    }
 
 }

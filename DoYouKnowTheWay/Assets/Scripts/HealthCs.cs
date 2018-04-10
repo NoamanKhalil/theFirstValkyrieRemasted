@@ -30,7 +30,7 @@ public class HealthCs : PunBehaviour
         if (isPlayerOne && isSinglePlayerActive)
         {
 
-            health = GameObject.Find("Player0_txt");
+            health = GameObject.Find("Player_txt");
         }
         if (isMultiplayerActive|| isLocalMultiplayerActive&& isPlayerOne)
         {
