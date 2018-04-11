@@ -104,10 +104,48 @@ public class SpawnSystemCs : MonoBehaviour
                     else if (waveCount ==2 )
                     {
                         Debug.Log("Wave 2 reached ");
+                        if (enemyCount >= maxEnemyCount)
+                        {
+                            return;
+                        }
+
+                        if (enemyCount <= maxEnemyCount)
+                        {
+                            GameObject go;
+                            go = Instantiate(enemyPrefabs[2], spawnPoints[Random.Range(0, spawnPoints.Length - 2)]);
+                            go.GetComponent<EnemyBehaviourCs>().waveCount = 2;
+                            enemyCount++;
+                            enemyDelay = 6f;
+                        }
+                        if (enemyCount >= maxEnemyCount)
+                        {
+                            waveCount++;
+                            //maxEnemyCount += 5;
+                            Debug.Log("WaveOver");
+                        }
                     }
                     else if (waveCount==3)
                     {
+                        Debug.Log("Wave 2 reached ");
+                        if (enemyCount >= maxEnemyCount)
+                        {
+                            return;
+                        }
 
+                        if (enemyCount <= maxEnemyCount)
+                        {
+                            GameObject go;
+                            go = Instantiate(enemyPrefabs[2], spawnPoints[Random.Range(0, spawnPoints.Length - 2)]);
+                            go.GetComponent<EnemyBehaviourCs>().waveCount = 3;
+                            enemyCount++;
+                            enemyDelay = 6f;
+                        }
+                        if (enemyCount >= maxEnemyCount)
+                        {
+                            waveCount++;
+                            //maxEnemyCount += 5;
+                            Debug.Log("WaveOver");
+                        }
                     }
 
                 }

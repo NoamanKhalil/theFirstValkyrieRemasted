@@ -19,6 +19,7 @@ public class HealthCs : PunBehaviour
     public bool isPlayerOne;
 
     public GameObject health;
+    public GameObject PlayerName;
     // Use this for initialization
     void Start()
     {
@@ -36,10 +37,12 @@ public class HealthCs : PunBehaviour
         {
             //health = GameObject.Find("Player_txt");
             health = GameObject.Find("Player0_txt");
+            PlayerName = GameObject.Find("PlayerName0");
         }
          if (isLocalMultiplayerActive|| !isPlayerOne)
         {
             health = GameObject.Find("Player_txt");
+            PlayerName = GameObject.Find("PlayerName");
         }
     }
 
@@ -47,6 +50,7 @@ public class HealthCs : PunBehaviour
     void Update()
     {
         health.GetComponent<Text>().text = ": " + shotsToDie;
+        PlayerName.GetComponent<Text>().text = "Name :" +PlayerPrefs.GetString("pName");
         if (shotsToDie <= 0)
         {
             gm.OnPlayerDie();
@@ -65,12 +69,14 @@ public class HealthCs : PunBehaviour
         {
             stream.SendNext(this.shotsToDie);
             stream.SendNext(this.health.GetComponent<Text>().text);
+            stream.SendNext(this.PlayerName.GetComponent<Text>().text);
             // stream.SendNext ()
         }
         else
         {
             this.shotsToDie = (int)stream.ReceiveNext();
             this.health.GetComponent<Text>().text = (string)stream.ReceiveNext();
+            this.PlayerName.GetComponent<Text>().text = (string)stream.ReceiveNext();
         }
     }
 }

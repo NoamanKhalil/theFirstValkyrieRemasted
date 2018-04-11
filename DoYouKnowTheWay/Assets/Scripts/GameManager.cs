@@ -36,6 +36,9 @@ public class GameManager : MonoBehaviour
     Text[] playerScoreTxt;
     #endregion
 
+    [Header("Buttons to Disable")]
+    private GameObject[] Buttons;
+
     #region Player objects 
     [Header("PlayerObjects")]
     [SerializeField]
@@ -91,7 +94,6 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-
     #region Public Mathods
     public void OnAwake()
     {
@@ -126,8 +128,6 @@ public class GameManager : MonoBehaviour
     }
 
     // Use this for initialization
-
-
     public void OnPlayerDie ()
     {
         myCanvas[1].SetActive(false);

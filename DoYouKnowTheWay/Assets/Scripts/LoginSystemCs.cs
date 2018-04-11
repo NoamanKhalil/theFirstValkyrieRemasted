@@ -194,12 +194,19 @@ public class LoginSystemCs : MonoBehaviour
             {
                // Debug.Log("Login was a success");
                 updatetxt[1].text = "You are logged in !";
+                PlayerPrefs.SetString("pName", LoginNameText.text.ToString());
+                Debug.Log(PlayerPrefs.GetString("pName"));
                 this.gameObject.GetComponent<GameManager>().isMultiplayerActive();
             }
             if (www.error == null)
             {
                 isLoggedIn = true;
-            }
+            // Debug.Log("Login was a success");
+            updatetxt[1].text = "You are logged in !";
+            PlayerPrefs.SetString("pName", LoginNameText.text.ToString());
+            Debug.Log(PlayerPrefs.GetString("pName"));
+            this.gameObject.GetComponent<GameManager>().isMultiplayerActive();
+        }
             
       
     }
