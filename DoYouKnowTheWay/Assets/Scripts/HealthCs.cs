@@ -50,7 +50,11 @@ public class HealthCs : PunBehaviour
     void Update()
     {
         health.GetComponent<Text>().text = ": " + shotsToDie;
-        PlayerName.GetComponent<Text>().text = "Name :" +PlayerPrefs.GetString("pName");
+        if (isMultiplayerActive)
+        {
+            PlayerName.GetComponent<Text>().text = "Name :" + PlayerPrefs.GetString("pName");
+        }
+        
         if (shotsToDie <= 0)
         {
             gm.OnPlayerDie();
