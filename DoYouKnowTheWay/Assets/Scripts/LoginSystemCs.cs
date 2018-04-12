@@ -33,7 +33,7 @@ public class LoginSystemCs : MonoBehaviour
 
     [Header("OnScreen error")]
     [SerializeField]
-    private Text[] updatetxt;
+    private Text updatetxt;
     private bool isEmailValid;
 
     public bool onNetworkCheck = false;
@@ -75,13 +75,13 @@ public class LoginSystemCs : MonoBehaviour
         if (!match.Success || mystring == null || mystring == "")
         {
 
-            updatetxt[1].text = "Status :  " + str + "  Is not a Email , please enter a valid email ";
+            updatetxt.text = "Status :  " + str + "  Is not a Email , please enter a valid email ";
             return true;
         }
         else if (match.Success)
         {
            
-            updatetxt[1].text = "Status :  " + str + "  Is a valid Email ";
+            updatetxt.text = "Status :  " + str + "  Is a valid Email ";
             return false;
         }
 
@@ -113,7 +113,7 @@ public class LoginSystemCs : MonoBehaviour
                     if (PasswordText.text != " " && PasswordVerifictationText.text != " ")
                     {
                         SamePass = true;
-                        updatetxt[0].text = "Hey m8 , passwords match =) ";
+                        updatetxt.text = "Please enter all fields correctly ";
                         return;
                     }
                 }
@@ -121,7 +121,7 @@ public class LoginSystemCs : MonoBehaviour
                 {
 
                     //Debug.Log("Hey m8, password no match  " + PasswordText.text +"  "+ PasswordVerifictationText.text);
-                    updatetxt[0].text = "Hey m8 , passwords no match  " + PasswordText.text +"  "+ PasswordVerifictationText.text;
+                    updatetxt.text = "Please enter all fields correctly " + PasswordText.text +"  "+ PasswordVerifictationText.text;
                     return;
                 }
             }
@@ -139,7 +139,7 @@ public class LoginSystemCs : MonoBehaviour
         else
         {
            // Debug.Log("Please enter the text properly " );
-            updatetxt[0].text = "Please enter all fields correctly ";
+            updatetxt.text = "Please enter all fields correctly ";
         }
 
     }
@@ -152,7 +152,7 @@ public class LoginSystemCs : MonoBehaviour
         else
         {
             //Debug.Log("Login was a failure as they are both null");
-            updatetxt[1].text = "Login Failed =/";
+            updatetxt.text = "Please enter all fields correctly";
 
         }
 
@@ -166,13 +166,13 @@ public class LoginSystemCs : MonoBehaviour
         form.AddField("passwordPost", PasswordText.text.ToString());
 
         WWW www = new WWW(urlRegister, form);
-        updatetxt[0].text = "You are registering...........";
+        updatetxt.text = "You are registering...........";
        // Debug.Log("Data");
         yield return www;
 
         string CreateAccountReturn = www.text;
         Debug.Log(CreateAccountReturn);
-        updatetxt[1].text = CreateAccountReturn.ToString();
+        updatetxt.text = CreateAccountReturn.ToString();
     }
 
     IEnumerator Login()
@@ -182,18 +182,18 @@ public class LoginSystemCs : MonoBehaviour
             form.AddField("usernamePost", LoginNameText.text.ToString());
             form.AddField("passwordPost", LoginPasswordText.text.ToString());
             WWW www = new WWW(urlLogin, form);
-             updatetxt[0].text = "You are Loging in ...........";
+             updatetxt.text = "You are Loging in ...........";
              //Debug.Log("Data");
              yield return www;
 
             string LoginAccountReturn = www.text;
             Debug.Log(LoginAccountReturn);
-            updatetxt[0].text =LoginAccountReturn;
+            updatetxt.text =LoginAccountReturn;
             
             if (www.text == " Login Success")
             {
                // Debug.Log("Login was a success");
-                updatetxt[1].text = "You are logged in !";
+                updatetxt.text = "You are logged in !";
                 PlayerPrefs.SetString("pName", LoginNameText.text.ToString());
                 Debug.Log(PlayerPrefs.GetString("pName"));
                 this.gameObject.GetComponent<GameManager>().isMultiplayerActive();
@@ -202,7 +202,7 @@ public class LoginSystemCs : MonoBehaviour
             {
                 isLoggedIn = true;
             // Debug.Log("Login was a success");
-            updatetxt[1].text = "You are logged in !";
+            updatetxt.text = "You are logged in !";
             PlayerPrefs.SetString("pName", LoginNameText.text.ToString());
             Debug.Log(PlayerPrefs.GetString("pName"));
             this.gameObject.GetComponent<GameManager>().isMultiplayerActive();

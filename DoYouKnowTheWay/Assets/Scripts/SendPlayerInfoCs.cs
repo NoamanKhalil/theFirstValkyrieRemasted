@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class SendPlayerInfoCs : MonoBehaviour
 {
+    [Header("Links To send and recive data")]
     [SerializeField]
-    private string Link;
+    private string SendLink;
+    private string ReciveLink;
+    private int GamesCountToIncrease;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -15,4 +19,20 @@ public class SendPlayerInfoCs : MonoBehaviour
 	void Update () {
 		
 	}
+
+
+    IEnumerator SendInfo()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("usernamePost", PlayerPrefs.GetString("pName"));
+        form.AddField("gamesPost", GamesCountToIncrease.ToString());
+
+        WWW www = new WWW(SendLink, form);
+        // Debug.Log("Data");
+        yield return www;
+
+        string SendInfoAndReturn = www.text;
+        Debug.Log(SendInfoAndReturn);
+       
+    }
 }
