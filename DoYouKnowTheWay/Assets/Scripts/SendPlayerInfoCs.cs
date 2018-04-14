@@ -19,7 +19,15 @@ public class SendPlayerInfoCs : MonoBehaviour
 	void Update () {
 		
 	}
+    public void SendMyInfo ()
+    {
+        StartCoroutine("SendInfo");
+    }
 
+    void reciveInfo ()
+    {
+
+    }
 
     IEnumerator SendInfo()
     {
