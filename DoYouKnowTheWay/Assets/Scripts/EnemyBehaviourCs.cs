@@ -97,7 +97,7 @@ public class EnemyBehaviourCs : PunBehaviour
             }
             
         }
-        Debug.Log(isOffline);
+        //Debug.Log(isOffline);
         if (shotsToDie <= 0)
         {
             if (isOffline)

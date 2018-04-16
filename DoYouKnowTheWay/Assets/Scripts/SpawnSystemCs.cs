@@ -15,7 +15,7 @@ public class SpawnSystemCs : MonoBehaviour
     [SerializeField]
     private float enemyDelay;
     [SerializeField]
-    private Text myWaveCount;
+    private GameObject myWaveCount;
 
     [Header("SpawnPoints")]
     [SerializeField]
@@ -52,7 +52,15 @@ public class SpawnSystemCs : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        myWaveCount.text = "Wave :" +waveCount + "/3";
+        if (isMultiplayer)
+        {
+            myWaveCount.GetComponent<Text>().text = "Wave :" + waveCount + "/3";
+        }
+        else if (!isMultiplayer)
+        {
+            myWaveCount.SetActive(false);
+        }
+        
         if (canStart)
         {
             enemyDelay -= Time.deltaTime;
@@ -94,8 +102,7 @@ public class SpawnSystemCs : MonoBehaviour
                         }
                         if (enemyCount >= maxEnemyCount)
                         {
-                            waveCount++;
-                            //maxEnemyCount += 5;
+                            gm.OnplayerWin();
                             Debug.Log("WaveOver");
                         }
                        
