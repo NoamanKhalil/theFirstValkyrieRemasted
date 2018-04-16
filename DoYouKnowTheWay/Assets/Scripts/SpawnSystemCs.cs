@@ -69,7 +69,7 @@ public class SpawnSystemCs : MonoBehaviour
                 //&& playerCount == 2
                 if (isMultiplayer && enemyCount <= maxEnemyCount && playerCount == 2 && enemyCount <= 2)
                 {
-                    Instantiate(enemyPrefabs[0], spawnPoints[4].position, Quaternion.Euler (0,0,-90));
+                   /* Instantiate(enemyPrefabs[0], spawnPoints[4].position, Quaternion.Euler (0,0,-90));
                     Instantiate(enemyPrefabs[1], spawnPoints[3].position , Quaternion.Euler (0,0,90));
                     enemyCount++;
 
@@ -80,7 +80,7 @@ public class SpawnSystemCs : MonoBehaviour
                         Debug.Log("WaveOver");
                     }
                     enemyDelay = 4f;
-                    //go.GetComponent<EnemyBehaviourCs>().SetWaveCount ()
+                    //go.GetComponent<EnemyBehaviourCs>().SetWaveCount ()*/
                 }
                 else if (!isMultiplayer)
                 {

@@ -1,6 +1,8 @@
 WindowsStandalone
 SceneListBegin?
 Assets/Scenes/MainScene.unity
+Assets/Scenes/Win.unity
+Assets/Scenes/Die.unity
 SceneListEnd?
 82c8c8940439d24517b71a242f62fbc3 Assembly-CSharp.dll:.HighlightOwnedGameObj
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.PunTeams
@@ -157,6 +159,7 @@ e0d7152ecf22ae2a833ea3b9acd8d0a2 Assembly-CSharp.dll:.WorkerInGame
 e626bae268f8b272b7a2d07760d262c6 Assembly-CSharp.dll:.PickupController
 1356b4a6096c35c829823b7e28399030 Assembly-CSharp.dll:.HubGui
 7bdd71fff980bb38968d2f8da56311d1 Assembly-CSharp.dll:.UiEnableCs
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.VirtualJoystickCs
 26215f135eeb48d8fa1189498c107f6c Vuforia.UnityExtensions.dll:Vuforia.AnchorBehaviour
 0561521e336e270e6e5a9c61387cb838 Vuforia.UnityExtensions.dll:Vuforia.AnchorInputListenerBehaviour
 2e0fd93f459db951da0e2e94e2e33fb7 Vuforia.UnityExtensions.dll:Vuforia.AnchorStageBehaviour
@@ -234,7 +237,6 @@ d2a2bd333db22f480a8589e167314ecc Vuforia.UnityExtensions.dll:Vuforia.UserDefined
 362c847978adb9cef4966ca1c5403c2b Assembly-CSharp.dll:.MoveCam
 4ce2b1853c9a392b036a6a654be90ccb Assembly-CSharp.dll:.OnClickInstantiate
 a7a85e3660316548e6df72942099a49d Assembly-CSharp.dll:.MessageOverlay
-fe9e9ffdbf451e04fa9ff9243972d859 Assembly-CSharp.dll:SpriteGlow.SpriteGlowEffect
 293b3d08f8607df9b4483b0dc4d8d5d6 Assembly-CSharp.dll:.ColorPerPlayer
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.NetworkCharacter
 351c5d1f25a90bb35ae4dce2cfb5fd8c Assembly-CSharp.dll:.HealthCs
@@ -330,7 +332,7 @@ e56b5fc5c2e6e5f0daedd1badfaecdca Assembly-CSharp.dll:.ScrollingBackground
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.OnClickRightDestroy
 47d4dbb91b8073a64be47276b7d4f29a Assembly-CSharp.dll:ExitGames.Demos.DemoAnimator.GameManager
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.OnDoubleclickDestroy
-c966ac0b003eaf491a5ea5c60cc58932 Assembly-CSharp.dll:.SendPlayerInfoCs
+1584dc198c2dbb577fb983f97b03c502 Assembly-CSharp.dll:.SendPlayerInfoCs
 4b8b25ed60c1bb417f20991003ba0256 Assembly-CSharp.dll:.WorkerMenu
 604f5f55c1cc414f64da1990b36ff015 Assembly-CSharp.dll:.PhotonView
 b2dc25029b6f083ffbbdf9df269f825a Assembly-CSharp.dll:.InRoomChat

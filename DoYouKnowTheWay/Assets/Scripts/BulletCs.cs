@@ -19,9 +19,16 @@ public class BulletCs : PunBehaviour
     {
         pw = GetComponent<PhotonView>();
         // destroys bullet after 0,45 seconds 
-        Invoke("DestroyMe", 1.0f);
+        if (isOnline)
+        {
+            Invoke("DestroyMe", 2f);
+        }
+        else if (isLocal)
+        {
+            Invoke("DestroyMe", 1.0f);
+        }
     }
-
+       
     /// TO be invoked when collison is achived 
     private void DestroyMe()
     {

@@ -10,7 +10,7 @@ public class LoadScenes : MonoBehaviour
     bool mytimeScale = false;
 	public void LoadScene (string str)
 	{
-		SceneManager.LoadSceneAsync (str);
+		SceneManager.LoadScene (str);
 	}
 
 	public void Exit ()

@@ -8,12 +8,16 @@ public class SendPlayerInfoCs : MonoBehaviour
     [SerializeField]
     private string SendLink;
     [SerializeField]
-    private string ReciveLink;
+    private string ReciveLinkName;
+    [SerializeField]
+    private string ReciveLinkGame;
 
-    public Text GlobalLeaderText;
+    public Text GlobalLeaderNameText;
+    public Text GlobalLeaderGameText;
 
 
-    public string [] myData;
+    public string[] myData;
+    public string[] alsoMyData;
     public void SendMyInfo ()
     {
         StartCoroutine("SendInfo");
@@ -21,13 +25,33 @@ public class SendPlayerInfoCs : MonoBehaviour
 
     public void reciveInfo ()
     {
-        StartCoroutine("ReciveInfo");
+        StartCoroutine("ReciveNameInfo");
+        StartCoroutine("ReciveGameInfo");
     }
-    IEnumerator ReciveInfo()
+    IEnumerator ReciveGameInfo()
+    {
+        alsoMyData = null;
+        GlobalLeaderGameText.text = null;
+        WWW Data = new WWW(ReciveLinkGame);
+
+
+        yield return Data;
+
+        string DataString = Data.text;
+        Debug.Log(DataString);
+        alsoMyData = DataString.Split(';');
+
+        for (int i = 0; i < alsoMyData.Length; i++)
+        {
+            //for every score we add it to the highScore UI text
+            GlobalLeaderGameText.text += alsoMyData[i] + "\n" + "\t";
+        }
+    }
+    IEnumerator ReciveNameInfo()
     {
         myData = null;
-        GlobalLeaderText.text = null;
-        WWW Data = new WWW(ReciveLink);
+        GlobalLeaderGameText.text = null;
+        WWW Data = new WWW(ReciveLinkName);
 
 
         yield return Data;
@@ -39,7 +63,7 @@ public class SendPlayerInfoCs : MonoBehaviour
         for (int i = 0; i < myData.Length; i++)
         {
             //for every score we add it to the highScore UI text
-            GlobalLeaderText.text += myData[i] + "\n"+ "\t";
+            GlobalLeaderNameText.text += myData[i] + "\n"+ "\t";
         }
     }
     IEnumerator SendInfo()

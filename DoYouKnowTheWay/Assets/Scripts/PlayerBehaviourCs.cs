@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon;
 
+
 public class PlayerBehaviourCs :PunBehaviour
 {
     #region Public variables implementation
@@ -154,16 +155,6 @@ public class PlayerBehaviourCs :PunBehaviour
             speed = 1.0f;
         }
 
-        if (shotsToDie <= 0)
-        {
-            if (!myPhotonView.isMine)
-            {
-                return;
-            }
-            win();
-        
-           
-        }
     }
 
     #endregion
@@ -236,22 +227,6 @@ public class PlayerBehaviourCs :PunBehaviour
     #endregion
 
     #region Private  Methods
-    void win ()
-    {
-        
-        if (shotsToDie <= 0 && myPhotonView.isMine)
-        {
-            PhotonNetwork.Disconnect();
-            gm.OnPlayerDie();
-            Destroy(this.gameObject);
-        }
-        else if (shotsToDie >= 1 && myPhotonView.isMine)
-        {
-            PhotonNetwork.Disconnect();
-            gm.OnplayerWin();
-            Destroy(this.gameObject);
-        }
-    }
 
     void FireProjectile0()
     {

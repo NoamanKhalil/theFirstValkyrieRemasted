@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon; 
+using Photon;
+using UnityEngine.SceneManagement;
 public class HealthCs : PunBehaviour
 {
 
@@ -44,24 +45,84 @@ public class HealthCs : PunBehaviour
             health = GameObject.Find("Player_txt");
             PlayerName = GameObject.Find("PlayerName");
         }
+        //PhotonNetwork.playerName = PlayerPrefs.GetString("pName");
+        if (photonView.isMine)
+        {
+            PhotonNetwork.playerName = PlayerPrefs.GetString("pName");
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        health.GetComponent<Text>().text = ": " + shotsToDie;
+        if (!photonView.isMine)
+        {
+            return;
+        }
+
+          health.GetComponent<Text>().text = ": " + shotsToDie;
         if (isMultiplayerActive)
         {
-            PlayerName.GetComponent<Text>().text = "Name :" + PlayerPrefs.GetString("pName");
+            PlayerName.GetComponent<Text>().text = photonView.owner.NickName; // "Name :" + PlayerPrefs.GetString("pName");
         }
-        
-        if (shotsToDie <= 0)
+
+
+        if (shotsToDie == 0)
         {
-            gm.OnPlayerDie();
-            Destroy(this.gameObject);
+
+            looseLife();
+
         }
 
     }
+    void looseLife()
+    {
+        photonView.RPC("win", PhotonTargets.All);
+    }
+    [PunRPC]
+    void win()
+    {
+        if (photonView.isMine)
+        {
+            SceneManager.LoadScene("Die");
+        }
+        else
+        {
+            SceneManager.LoadScene("Win");
+
+        }
+    }
+    /* void looseLife ()
+     {
+         photonView.RPC("win", PhotonTargets.Others);
+         //Invoke("win", 0.5f);
+         SceneManager.LoadScene("Die");
+     }
+     [PunRPC]
+     void win()
+     {
+
+
+         if (!photonView.isMine)
+         {
+             return;
+         }
+
+
+         Debug.Log(gameObject.name + "- 1");
+         Debug.Log(shotsToDie.ToString());
+         Debug.Log(photonView.isMine);
+         //put counter for num of players when = > 2 is winner
+         PhotonNetwork.Disconnect();
+         if (this.shotsToDie >=1)
+         {
+             SceneManager.LoadScene("Win");
+             return;
+         }
+
+         SceneManager.LoadScene("Die");
+     }*/
+
     public void TakeDamage()
     {
         shotsToDie--;
@@ -72,14 +133,14 @@ public class HealthCs : PunBehaviour
         if (stream.isWriting)
         {
             stream.SendNext(this.shotsToDie);
-            stream.SendNext(this.health.GetComponent<Text>().text);
+            //stream.SendNext(this.health.GetComponent<Text>().text);
             stream.SendNext(this.PlayerName.GetComponent<Text>().text);
             // stream.SendNext ()
         }
         else
         {
             this.shotsToDie = (int)stream.ReceiveNext();
-            this.health.GetComponent<Text>().text = (string)stream.ReceiveNext();
+           // this.health.GetComponent<Text>().text = (string)stream.ReceiveNext();
             this.PlayerName.GetComponent<Text>().text = (string)stream.ReceiveNext();
         }
     }

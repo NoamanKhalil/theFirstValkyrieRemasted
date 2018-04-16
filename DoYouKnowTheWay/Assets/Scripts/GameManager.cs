@@ -129,6 +129,11 @@ public class GameManager : MonoBehaviour
             stuffToDisable[5].gameObject.SetActive(false);
             stuffToDisable[6].gameObject.SetActive(false);
             stuffToDisable[7].gameObject.SetActive(false);
+            /*#if UNITY_ANDROID || UNITY_EDITOR
+         //   {
+                //myCanvas[5]].gameObject.SetActive(true);
+          //  }
+            //#endif*/
         }
         else if (isMultiPlayer)
         {
