@@ -19,7 +19,7 @@ public class BulletCs : PunBehaviour
     {
         pw = GetComponent<PhotonView>();
         // destroys bullet after 0,45 seconds 
-        Invoke("DestroyMe", 1.8f);
+        Invoke("DestroyMe", 1.0f);
     }
 
     /// TO be invoked when collison is achived 
