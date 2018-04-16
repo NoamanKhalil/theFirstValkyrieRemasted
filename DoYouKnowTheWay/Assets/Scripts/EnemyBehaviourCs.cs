@@ -26,12 +26,14 @@ public class EnemyBehaviourCs : PunBehaviour
     public int waveCount;
     public int posPoint;
     public bool canShoot;
+
+    private float tempReset;
     // Use this for initialization
     private void Awake()
     {
         gm = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<GameManager>();
-          // set 0 for multiplayer 
-       
+        // set 0 for multiplayer 
+        tempReset = shotReset;
         posPoint =0;
          isOffline = gm.isSinglePlayerCheck();
          isOnline = gm.isMultiplayerCheck();
@@ -56,6 +58,15 @@ public class EnemyBehaviourCs : PunBehaviour
         {
             pathToFollow = GameObject.Find("Pattern3").GetComponentsInChildren<Transform>();
         }
+        else if (waveCount == 4)
+        {
+            pathToFollow = GameObject.Find("Pattern4").GetComponentsInChildren<Transform>();
+        }
+        else if (waveCount == 5)
+        {
+            pathToFollow = GameObject.Find("Pattern5").GetComponentsInChildren<Transform>();
+        }
+
     }
     public void SetWaveCount (int wave)
     {
@@ -92,7 +103,7 @@ public class EnemyBehaviourCs : PunBehaviour
             {
                GameObject go = PhotonNetwork.Instantiate(bullet.name, enemyShootPos.position, Quaternion.Euler(0, 0, shootAngle), 0);
                 go.GetComponent<Rigidbody2D>().AddForce(fireVector * 500);
-                shotReset = 2f;
+                shotReset = tempReset;
                 //FireProjectile0();
             }
             

@@ -128,6 +128,7 @@ public class PlayerBehaviourCs :PunBehaviour
     }
     void Update()
     {
+        OnCheat();
          //health.GetComponent<Text>().text = ": " + shotsToDie;
         shotReset -= Time.deltaTime;
         Movement();
@@ -238,13 +239,13 @@ public class PlayerBehaviourCs :PunBehaviour
     void win ()
     {
         
-        if (shotsToDie < 0 && myPhotonView.isMine)
+        if (shotsToDie <= 0 && myPhotonView.isMine)
         {
             PhotonNetwork.Disconnect();
             gm.OnPlayerDie();
             Destroy(this.gameObject);
         }
-        else if (shotsToDie > 0 && myPhotonView.isMine)
+        else if (shotsToDie >= 1 && myPhotonView.isMine)
         {
             PhotonNetwork.Disconnect();
             gm.OnplayerWin();
@@ -256,7 +257,16 @@ public class PlayerBehaviourCs :PunBehaviour
     {
         myPhotonView.RPC("FireProjectile", PhotonTargets.All);
     }
-
+    void OnCheat ()
+    {
+        if (Input.GetKey(KeyCode.L)&& Input.GetKey(KeyCode.K))
+        {
+            this.gameObject.GetComponent<Collider2D>().enabled = false;
+            attackLevel=3;
+            Shield.SetActive(true);
+            shotsToDie += 10;
+        }
+    }
     [PunRPC]
     void FireProjectile()
     {

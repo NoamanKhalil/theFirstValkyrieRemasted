@@ -54,11 +54,11 @@ public class SpawnSystemCs : MonoBehaviour
     {
         if (isMultiplayer)
         {
-            myWaveCount.GetComponent<Text>().text = "Wave :" + waveCount + "/3";
+            myWaveCount.GetComponent<Text>().text = "Wave :" + waveCount + "/5";
         }
         else if (!isMultiplayer)
         {
-            myWaveCount.SetActive(false);
+            myWaveCount.GetComponent<Text>().text = "Wave :" + waveCount + "/5";
         }
         
         if (canStart)
@@ -98,14 +98,15 @@ public class SpawnSystemCs : MonoBehaviour
                             go = Instantiate(enemyPrefabs[2], spawnPoints[Random.Range(0, spawnPoints.Length - 2)]);
                             go.GetComponent<EnemyBehaviourCs>().waveCount = 1;
                             enemyCount++;
-                            enemyDelay = 6f;
+                            enemyDelay = 7.5f;
                         }
+
                         if (enemyCount >= maxEnemyCount)
                         {
-                            gm.OnplayerWin();
+                            waveCount++;
+                            maxEnemyCount += 5;
                             Debug.Log("WaveOver");
                         }
-                       
 
                     }
                     else if (waveCount ==2 )
@@ -119,21 +120,21 @@ public class SpawnSystemCs : MonoBehaviour
                         if (enemyCount <= maxEnemyCount)
                         {
                             GameObject go;
-                            go = Instantiate(enemyPrefabs[2], spawnPoints[Random.Range(0, spawnPoints.Length - 2)]);
+                            go = Instantiate(enemyPrefabs[3], spawnPoints[Random.Range(0, spawnPoints.Length - 2)]);
                             go.GetComponent<EnemyBehaviourCs>().waveCount = 2;
                             enemyCount++;
-                            enemyDelay = 6f;
+                            enemyDelay = 7f;
                         }
                         if (enemyCount >= maxEnemyCount)
                         {
                             waveCount++;
-                            //maxEnemyCount += 5;
+                            maxEnemyCount += 10;
                             Debug.Log("WaveOver");
                         }
                     }
                     else if (waveCount==3)
                     {
-                        Debug.Log("Wave 2 reached ");
+                        Debug.Log("Wave 3 reached ");
                         if (enemyCount >= maxEnemyCount)
                         {
                             return;
@@ -142,7 +143,30 @@ public class SpawnSystemCs : MonoBehaviour
                         if (enemyCount <= maxEnemyCount)
                         {
                             GameObject go;
-                            go = Instantiate(enemyPrefabs[2], spawnPoints[Random.Range(0, spawnPoints.Length - 2)]);
+                            go = Instantiate(enemyPrefabs[4], spawnPoints[Random.Range(0, spawnPoints.Length - 2)]);
+                            go.GetComponent<EnemyBehaviourCs>().waveCount = 3;
+                            enemyCount++;
+                            enemyDelay = 6.5f;
+                        }
+                        if (enemyCount >= maxEnemyCount)
+                        {
+                            waveCount++;
+                            maxEnemyCount += 5;
+                            Debug.Log("WaveOver");
+                        }
+                    }
+                    else if (waveCount == 4)
+                    {
+                        Debug.Log("Wave 4 reached ");
+                        if (enemyCount >= maxEnemyCount)
+                        {
+                            return;
+                        }
+
+                        if (enemyCount <= maxEnemyCount)
+                        {
+                            GameObject go;
+                            go = Instantiate(enemyPrefabs[5], spawnPoints[Random.Range(0, spawnPoints.Length - 2)]);
                             go.GetComponent<EnemyBehaviourCs>().waveCount = 3;
                             enemyCount++;
                             enemyDelay = 6f;
@@ -150,7 +174,29 @@ public class SpawnSystemCs : MonoBehaviour
                         if (enemyCount >= maxEnemyCount)
                         {
                             waveCount++;
-                            //maxEnemyCount += 5;
+                            maxEnemyCount -=5;
+                            Debug.Log("WaveOver");
+                        }
+                    }
+                    else if (waveCount == 5)
+                    {
+                        Debug.Log("Wave 5 reached ");
+                        if (enemyCount >= maxEnemyCount)
+                        {
+                            return;
+                        }
+
+                        if (enemyCount <= maxEnemyCount)
+                        {
+                            GameObject go;
+                            go = Instantiate(enemyPrefabs[6], spawnPoints[Random.Range(0, spawnPoints.Length - 2)]);
+                            go.GetComponent<EnemyBehaviourCs>().waveCount = 3;
+                            enemyCount++;
+                            enemyDelay = 6f;
+                        }
+                        if (enemyCount >= maxEnemyCount)
+                        {
+                            gm.OnplayerWin();
                             Debug.Log("WaveOver");
                         }
                     }

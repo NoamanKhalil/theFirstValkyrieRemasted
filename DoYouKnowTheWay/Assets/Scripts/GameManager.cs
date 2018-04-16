@@ -124,6 +124,17 @@ public class GameManager : MonoBehaviour
             go.GetComponent<PhotonTransformView>().enabled = false;
             stuffToDisable[0].gameObject.SetActive(false);
             stuffToDisable[1].gameObject.SetActive(false);
+            stuffToDisable[2].gameObject.SetActive(false);
+            stuffToDisable[4].gameObject.SetActive(false);
+            stuffToDisable[5].gameObject.SetActive(false);
+            stuffToDisable[6].gameObject.SetActive(false);
+            stuffToDisable[7].gameObject.SetActive(false);
+        }
+        else if (isMultiPlayer)
+        {
+            stuffToDisable[8].gameObject.SetActive(false);
+            //pause button
+            stuffToDisable[9].gameObject.SetActive(false);
         }
     }
 
