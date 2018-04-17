@@ -67,10 +67,17 @@ public class HealthCs : PunBehaviour
         }
 
 
-        if (shotsToDie == 0)
+        if (shotsToDie <= 0)
         {
+            if (isMultiplayerActive)
+            {
+                looseLife();
+            }
+            else if (isSinglePlayerActive)
+            {
+                SceneManager.LoadScene("Die");
+            }
 
-            looseLife();
 
         }
 

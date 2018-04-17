@@ -45,7 +45,7 @@ public class PowerUp : MonoBehaviour {
         }
         else if (col.gameObject.tag.Equals("PlayerProjectile"))
         {
-            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<GameManager>().addScore(50, "0");
+            GameObject.FindGameObjectWithTag("MainCamera").GetComponent<GameManager>().addScore(100, "0");
             isActive = false;
         }
         else

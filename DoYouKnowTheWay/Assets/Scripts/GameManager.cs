@@ -39,6 +39,9 @@ public class GameManager : MonoBehaviour
     [Header("Buttons to Disable")]
     private GameObject[] Buttons;
 
+
+    public GameObject VirtualJoystick;
+
     #region Player objects 
     [Header("PlayerObjects")]
     [SerializeField]
@@ -51,6 +54,8 @@ public class GameManager : MonoBehaviour
     #endregion
 
 
+    public GameObject player1;
+    public bool onAndroid;
     #region MonoBehaviour CallBacks 
     void Awake()
     {
@@ -73,6 +78,9 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
+
+        
+
         playerScoreTxt[0].text = "Score: " + playerScore.ToString();
         playerScoreTxt[1].text = "Score: " + playerScore0.ToString();
         // playerScore.text = ":" + player;	
@@ -80,6 +88,10 @@ public class GameManager : MonoBehaviour
         {
             isLocalMultiplayer = false;
             isMultiPlayer = false;
+            if (onAndroid)
+            {
+                VirtualJoystick.SetActive(true);
+            }
         }
         if (isLocalMultiplayer == true)
         {
@@ -122,6 +134,7 @@ public class GameManager : MonoBehaviour
             go.GetComponent<PhotonView>().OnDestroy();
            go.GetComponent<PlayerNetworkCs>().enabled = false;
             go.GetComponent<PhotonTransformView>().enabled = false;
+            player1 = go.gameObject;
             stuffToDisable[0].gameObject.SetActive(false);
             stuffToDisable[1].gameObject.SetActive(false);
             stuffToDisable[2].gameObject.SetActive(false);

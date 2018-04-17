@@ -11,6 +11,8 @@ public class PlayerBehaviourCs :PunBehaviour
 
 
     //public GameObject health;
+    public bool onAndroid;
+    public VirtualJoystickCs vs;
     public GameObject Shield;
     public Transform[] firePos;
     public bool OnController;
@@ -96,7 +98,10 @@ public class PlayerBehaviourCs :PunBehaviour
         isSinglePlayerActive = gm.isSinglePlayerCheck();
         isMultiplayerActive = gm.isMultiplayerCheck();
         isLocalMultiplayerActive = gm.isLocalMultiplayerCheck();
-
+        if (onAndroid)
+        {
+            vs = gm.VirtualJoystick.GetComponentInChildren<VirtualJoystickCs>(); //GameObject.FindGameObjectWithTag("AndroidControl").GetComponentInChildren<VirtualJoystickCs>();
+        }
         /*if (isPlayerOne )
         {
 
@@ -132,7 +137,9 @@ public class PlayerBehaviourCs :PunBehaviour
         OnCheat();
          //health.GetComponent<Text>().text = ": " + shotsToDie;
         shotReset -= Time.deltaTime;
-        Movement();
+       
+            Movement();
+
         if (shotReset < 0)
         {
             // fire works differently in photon 
@@ -345,17 +352,22 @@ public class PlayerBehaviourCs :PunBehaviour
         // temporary varibles used for hoizontal and vertical movement 
 
         // conditions to check if its player one or not and use different input axises in the same script 
-        if (isPlayerOne == true)
+        if (isPlayerOne && !onAndroid)
         {
             h = Input.GetAxis("Horizontal") * speed;
             v = Input.GetAxis("Vertical") * speed;
             //Debug.Log("H " + h + "V= " + v);
         }
-        else if (!isPlayerOne)
+        else if (!isPlayerOne && !onAndroid)
         {
             h = Input.GetAxis("Horizontal0") * speed;
             v = Input.GetAxis("Vertical0") * speed;
             // Debug.Log("H " + h  +"V= "+ v);
+        }
+        else if (onAndroid)
+        {
+            h = vs.Horizontal();
+            v = vs.Vertical();
         }
         // calculates the amount to move on x and y however x is clamped 
         movement = new Vector2(h, v);

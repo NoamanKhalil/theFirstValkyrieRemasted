@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class LoadScenes : MonoBehaviour
 {
     // Use this for initialization
-    bool mytimeScale = false;
+    bool mytimeScale = true;
 	public void LoadScene (string str)
 	{
 		SceneManager.LoadScene (str);
@@ -23,10 +23,15 @@ public class LoadScenes : MonoBehaviour
         if (mytimeScale == true)
         {
             Time.timeScale = 1;
+            mytimeScale = false;
+            return;
+
         }
         if (mytimeScale ==false)
         {
             Time.timeScale = 0;
+            mytimeScale = true;
+            return;
         }
         
     }

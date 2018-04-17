@@ -114,7 +114,27 @@ public class EnemyBehaviourCs : PunBehaviour
             if (isOffline)
             {
                 makePowerUp();
-                gm.addScore(100, "0");
+                if (waveCount== 1)
+                {
+                    gm.addScore(100, "0");
+                }
+                else if (waveCount == 2)
+                {
+                    gm.addScore(150, "0");
+                }
+                else if (waveCount == 3)
+                {
+                    gm.addScore(200, "0");
+                }
+                else if (waveCount == 4)
+                {
+                    gm.addScore(250, "0");
+                }
+                else if (waveCount == 5)
+                {
+                    gm.addScore(300, "0");
+                }
+
             }
             else
             {
