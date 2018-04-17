@@ -281,7 +281,7 @@ public class PlayerBehaviourCs :PunBehaviour
                     {
                     clone[i] = Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, -90)) as GameObject;
                     clone[i].GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500, ForceMode2D.Force);
-                   // aud.Play();
+                   aud.Play();
                     shotReset = 0.5f;
                     }
                 }
@@ -291,7 +291,7 @@ public class PlayerBehaviourCs :PunBehaviour
                     {
                     clone [i]= Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, -90)) as GameObject;
                     clone[i].GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500, ForceMode2D.Force);
-                    //aud.Play();
+                    aud.Play();
                     shotReset = 0.5f;
                     }
                 }
@@ -306,7 +306,7 @@ public class PlayerBehaviourCs :PunBehaviour
                 {
                 clone[0] = Instantiate(projectile[ProjectilePrefab], firePos[0].position, Quaternion.Euler(0, 0, 90)) as GameObject ;
                 clone[0].GetComponent<Rigidbody2D>().AddForce(Vector3.left * 500, ForceMode2D.Force);
-                //aud.Play();
+                aud.Play();
                 shotReset = 0.5f;
             }
                 else if (attackLevel == 1)
@@ -315,7 +315,7 @@ public class PlayerBehaviourCs :PunBehaviour
                     {
                     clone[i] = Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, 90)) as GameObject;
                     clone[i].GetComponent<Rigidbody2D>().AddForce(Vector3.left * 500, ForceMode2D.Force);
-                    //aud.Play();
+                    aud.Play();
                     shotReset = 0.5f;
                 }
                 }
@@ -325,7 +325,7 @@ public class PlayerBehaviourCs :PunBehaviour
                 {
                     clone[i] = Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, 90)) as GameObject;
                     clone[i].GetComponent<Rigidbody2D>().AddForce(Vector3.left * 500, ForceMode2D.Force);
-                    //aud.Play();
+                    aud.Play();
                     shotReset = 0.5f;
                 }
        

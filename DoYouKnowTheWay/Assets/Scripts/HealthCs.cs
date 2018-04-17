@@ -55,7 +55,7 @@ public class HealthCs : PunBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!photonView.isMine)
+        if (!photonView.isMine && isMultiplayerActive)
         {
             return;
         }

@@ -150,7 +150,7 @@ public class EnemyBehaviourCs : PunBehaviour
     [PunRPC]
     void makePowerUp()
     {
-        Instantiate(PowerUps[Random.Range(0, 14)], powerupPos.position, Quaternion.identity) ;
+        Instantiate(PowerUps[Random.Range(0, 11)], powerupPos.position, Quaternion.identity) ;
         this.gameObject.SetActive(false);
     }
     [PunRPC]
