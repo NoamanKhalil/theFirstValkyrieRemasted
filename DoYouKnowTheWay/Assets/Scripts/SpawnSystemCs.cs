@@ -105,13 +105,13 @@ public class SpawnSystemCs : MonoBehaviour
                         {
                             waveCount++;
                             maxEnemyCount += 5;
-                            Debug.Log("WaveOver");
+                           // Debug.Log("WaveOver");
                         }
 
                     }
                     else if (waveCount ==2 )
                     {
-                        Debug.Log("Wave 2 reached ");
+                        //Debug.Log("Wave 2 reached ");
                         if (enemyCount >= maxEnemyCount)
                         {
                             return;
@@ -129,12 +129,12 @@ public class SpawnSystemCs : MonoBehaviour
                         {
                             waveCount++;
                             maxEnemyCount += 10;
-                            Debug.Log("WaveOver");
+                            //Debug.Log("WaveOver");
                         }
                     }
                     else if (waveCount==3)
                     {
-                        Debug.Log("Wave 3 reached ");
+                        //Debug.Log("Wave 3 reached ");
                         if (enemyCount >= maxEnemyCount)
                         {
                             return;
@@ -152,12 +152,12 @@ public class SpawnSystemCs : MonoBehaviour
                         {
                             waveCount++;
                             maxEnemyCount += 5;
-                            Debug.Log("WaveOver");
+                            //Debug.Log("WaveOver");
                         }
                     }
                     else if (waveCount == 4)
                     {
-                        Debug.Log("Wave 4 reached ");
+                        //Debug.Log("Wave 4 reached ");
                         if (enemyCount >= maxEnemyCount)
                         {
                             return;
@@ -175,7 +175,7 @@ public class SpawnSystemCs : MonoBehaviour
                         {
                             waveCount++;
                             maxEnemyCount -=5;
-                            Debug.Log("WaveOver");
+                            //Debug.Log("WaveOver");
                         }
                     }
                     else if (waveCount == 5)
@@ -197,7 +197,7 @@ public class SpawnSystemCs : MonoBehaviour
                         if (enemyCount >= maxEnemyCount)
                         {
                             gm.OnplayerWin();
-                            Debug.Log("WaveOver");
+                            //Debug.Log("WaveOver");
                         }
                     }
 
@@ -210,13 +210,13 @@ public class SpawnSystemCs : MonoBehaviour
     {
         isMultiplayer = true;
         canStart = true;
-        Debug.Log("Multplayer set in spawn");
+        //Debug.Log("Multplayer set in spawn");
     }
     public void isNotMultplayerSet()
     {
         isMultiplayer = false;
         canStart = true;
-        Debug.Log("!Multplayer set in spawn");
+        //Debug.Log("!Multplayer set in spawn");
     }
     public void PlayerCountIncrease ()
     {

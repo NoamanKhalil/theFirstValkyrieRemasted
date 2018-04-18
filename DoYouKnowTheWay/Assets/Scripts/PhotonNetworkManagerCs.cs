@@ -46,12 +46,12 @@ public class PhotonNetworkManagerCs : Photon.MonoBehaviour
     {
         if (PhotonNetwork.countOfPlayers == myroom.MaxPlayers)
         {
-            Debug.Log("true");
+            //Debug.Log("true");
             return true;
         }
         else
         {
-            Debug.Log("false");
+           // Debug.Log("false");
             return false;
         }
     }
@@ -77,19 +77,19 @@ public class PhotonNetworkManagerCs : Photon.MonoBehaviour
  
     public virtual void OnJoinedLobby()
     {
-        Debug.Log("Connected to master");
+        //Debug.Log("Connected to master");
         PhotonNetwork.JoinOrCreateRoom("New", null, null);
     }
       public virtual void OnConnectedToMaster()
       {
-        Debug.Log("Connected to master");
+        //Debug.Log("Connected to master");
         PhotonNetwork.JoinOrCreateRoom("New", null, null);
       }
     public void OnJoinedRoom()
     {
         //PhotonNetwork.Instantiate(Player[spawnCount].name, spawnPoints[spawnCount].transform.position, spawnPoints[spawnCount].transform.rotation, 0);
         PhotonNetwork.Instantiate(Player[PhotonNetwork.player.ID - 1].name, spawnPoints[PhotonNetwork.player.ID - 1].transform.position, Player[PhotonNetwork.player.ID - 1].transform.rotation, 0);
-        Debug.Log("JOINED ROOM");
+        //Debug.Log("JOINED ROOM");
        // spawnCount++;
     }
 

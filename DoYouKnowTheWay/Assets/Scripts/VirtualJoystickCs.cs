@@ -52,12 +52,12 @@ public class VirtualJoystickCs : MonoBehaviour , IDragHandler,IPointerUpHandler,
     {
         if (inputVector.x != 0)
         {
-            Debug.Log("Works_Horizontal");
+            //Debug.Log("Works_Horizontal");
             return inputVector.x;
         }
         else
         {
-            Debug.Log("Works_Horizontal");
+           // Debug.Log("Works_Horizontal");
             return Input.GetAxis("Horizontal");
         }
   
@@ -66,12 +66,12 @@ public class VirtualJoystickCs : MonoBehaviour , IDragHandler,IPointerUpHandler,
     {
         if (inputVector.z != 0)
         {
-            Debug.Log("Works_Vertical");
+           // Debug.Log("Works_Vertical");
             return inputVector.z;
         }   
         else
         {
-           Debug.Log("Works_Vertical");
+           //Debug.Log("Works_Vertical");
             return Input.GetAxis("Vertical");
             
         }

@@ -132,7 +132,7 @@ public class GameManager : MonoBehaviour
             GameObject go;
             go= Instantiate(playerPrefabs[1], spawnPos[0].transform.position, Quaternion.Euler(0, 0, 90));
             go.GetComponent<PhotonView>().OnDestroy();
-           go.GetComponent<PlayerNetworkCs>().enabled = false;
+            go.GetComponent<PlayerNetworkCs>().enabled = false;
             go.GetComponent<PhotonTransformView>().enabled = false;
             player1 = go.gameObject;
             stuffToDisable[0].gameObject.SetActive(false);

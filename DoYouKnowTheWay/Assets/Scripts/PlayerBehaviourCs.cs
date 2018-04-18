@@ -272,7 +272,7 @@ public class PlayerBehaviourCs :PunBehaviour
        
         if (Input.GetAxis("Fire4") != 0 && !isPlayerOne )
         {
-                Debug.Log("PEw PEW");
+                //Debug.Log("PEw PEW");
                 GameObject[] clone = new GameObject [3];
                 //clone= Instantiate(projectile, firePos[0].position, transform.rotation) as Rigidbody;
                 if (attackLevel ==0)
@@ -306,7 +306,7 @@ public class PlayerBehaviourCs :PunBehaviour
         }
             else if (Input.GetAxis("Fire5")!=0 &&isPlayerOne == true)
             {
-                Debug.Log("BEw BEW");
+                //Debug.Log("BEw BEW");
                 GameObject[] clone = new GameObject[3];
                 //clone= Instantiate(projectile, firePos[0].position, transform.rotation) as Rigidbody;
                 if (attackLevel == 0)
