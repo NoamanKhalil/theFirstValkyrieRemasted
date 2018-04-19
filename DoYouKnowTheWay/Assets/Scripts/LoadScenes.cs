@@ -20,20 +20,13 @@ public class LoadScenes : MonoBehaviour
 
     public void pause ()
     {
-        if (mytimeScale == true)
-        {
-            Time.timeScale = 1;
-            mytimeScale = false;
-            return;
 
-        }
-        if (mytimeScale ==false)
-        {
-            Time.timeScale = 0;
-            mytimeScale = true;
-            return;
-        }
-        
+        Time.timeScale = 0;
     }
+    public void unPause ()
+    {
+        Time.timeScale = 1;
+    }
+
 
 }
