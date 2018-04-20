@@ -1,4 +1,4 @@
-WindowsStandalone
+Android
 SceneListBegin?
 Assets/Scenes/MainScene.unity
 Assets/Scenes/Win.unity
@@ -257,7 +257,7 @@ bbf3b93c2ec493f19740c6ab756345f1 Assembly-CSharp.dll:.AudioManagerCs
 b9efe2a0d1c9ba7bc46e66a07a897115 Assembly-CSharp.dll:.ServerSettings
 fb2ac97018c2c9b8b721d1a47fc40206 Assembly-CSharp.dll:ExitGames.Demos.DemoAnimator.Launcher
 e3db0de06ede87e84b88d4a2079f2b57 Assembly-CSharp.dll:ExitGames.UtilityScripts.TextButtonTransition
-26b5ba58d367e5afec5922e37b19b2a0 Assembly-CSharp.dll:.PlayerBehaviourCs
+c8a75a721049d25a1446f7ddba343acd Assembly-CSharp.dll:.PlayerBehaviourCs
 efd21215c98caa7727e3de46ab312181 Assembly-CSharp.dll:.PlayerNetworkCs
 1579d2d26533a154c541754153b8ae33 Assembly-CSharp.dll:ExitGames.Demos.DemoAnimator.PlayerUI
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
@@ -289,7 +289,7 @@ cb9b23bb8d8552626640cca26addf6f1 Assembly-CSharp.dll:.FriendItem
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 abe32a93cd37b12375c9475f8f38bec3 Assembly-CSharp.dll:.PunTurnManager
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
-0e5a9deef0f75842850df02758da678d Assembly-CSharp.dll:.GameManager
+1bf8538db3fc4ccfa48a48d9909272d2 Assembly-CSharp.dll:.GameManager
 9cb24d80f90c6c239d5304446a0d7f3e Assembly-CSharp.dll:.CubeInter
 c0b17230605b48ee2c8fdf6ad9d187ec Assembly-CSharp.dll:ExitGames.Demos.DemoAnimator.CameraWork
 febb860c81dce3b7f633ebf56de24419 Assembly-CSharp.dll:.IdleRunJump

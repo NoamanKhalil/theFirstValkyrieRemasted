@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Photon;
 
 
-public class PlayerBehaviourCs :PunBehaviour
+public class PlayerBehaviourCs : PunBehaviour
 {
     #region Public variables implementation
 
@@ -48,6 +48,8 @@ public class PlayerBehaviourCs :PunBehaviour
     private bool isLocalMultiplayerActive;
 
 
+    public Button fireBtn;
+
     private PhotonView myPhotonView;
     [SerializeField]
     private int attackLevel;
@@ -75,23 +77,23 @@ public class PlayerBehaviourCs :PunBehaviour
         clampPoints[0] = GameObject.Find("ClampPosY0");
         clampPoints[1] = GameObject.Find("ClampPosY");
         aud = GetComponent<AudioSource>();
-       /* if (isPlayerOne)
-        {
+        /* if (isPlayerOne)
+         {
 
-        }
-        else if (!isPlayerOne)
-        {
-            clampPoints[0] = GameObject.Find("ClampPosY1");
-            clampPoints[1] = GameObject.Find("ClampPosY2");
-        }*/
+         }
+         else if (!isPlayerOne)
+         {
+             clampPoints[0] = GameObject.Find("ClampPosY1");
+             clampPoints[1] = GameObject.Find("ClampPosY2");
+         }*/
 
         PhotonNetwork.sendRate = 20;
         PhotonNetwork.sendRateOnSerialize = 10;
         ProjectilePrefab = 0;
         attackLevel = 0;
 
-       myPhotonView = GetComponent<PhotonView>();
-        
+        myPhotonView = GetComponent<PhotonView>();
+
         rb = GetComponent<Rigidbody2D>();
         gm = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<GameManager>();
         gm.spawnSystem.PlayerCountIncrease();
@@ -101,6 +103,8 @@ public class PlayerBehaviourCs :PunBehaviour
         if (onAndroid)
         {
             vs = gm.VirtualJoystick.GetComponentInChildren<VirtualJoystickCs>(); //GameObject.FindGameObjectWithTag("AndroidControl").GetComponentInChildren<VirtualJoystickCs>();
+
+
         }
         /*if (isPlayerOne )
         {
@@ -130,26 +134,43 @@ public class PlayerBehaviourCs :PunBehaviour
             //disable its control 
             cannotControl();
         }
+        if (onAndroid)
+        {
+            // type of button  , finds object with tag 
+            fireBtn = GameObject.FindGameObjectWithTag("FireBtn").GetComponent<Button>();
+            //fireBtn.onClick.AddListener(FireProjectile);
+            fireBtn.onClick.AddListener(() => FirePro());
+            Debug.Log("Listerner working");
+        }
 
     }
+
+
+
     void Update()
     {
         OnCheat();
-         //health.GetComponent<Text>().text = ": " + shotsToDie;
+        //health.GetComponent<Text>().text = ": " + shotsToDie;
         shotReset -= Time.deltaTime;
-       
-            Movement();
+
+        Movement();
 
         if (shotReset < 0)
         {
             // fire works differently in photon 
-            if (isMultiplayerActive&& myPhotonView.isMine)
+            if (isMultiplayerActive && myPhotonView.isMine && onAndroid == false)
             {
+                Debug.Log("Update Fp called netowrked  ");
                 FireProjectile0();
             }
             else if (isSinglePlayerActive || isLocalMultiplayerActive)
             {
-                FirePro();
+                if (  onAndroid == false)
+                {
+                    Debug.Log("Update Fp");
+                    FirePro();
+                }
+               
             }
         }
 
@@ -239,73 +260,74 @@ public class PlayerBehaviourCs :PunBehaviour
     {
         myPhotonView.RPC("FireProjectile", PhotonTargets.All);
     }
-    void OnCheat ()
+    void OnCheat()
     {
-        if (Input.GetKey(KeyCode.L)&& Input.GetKey(KeyCode.K))
+        if (Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.K))
         {
             this.gameObject.GetComponent<Collider2D>().enabled = false;
-            attackLevel=3;
+            attackLevel = 3;
             Shield.SetActive(true);
             shotsToDie += 10;
         }
     }
     [PunRPC]
-    void FireProjectile()
+    public void FireProjectile()
     {
-       if  (Input.GetAxis("Fire4") != 0 && !isPlayerOne)
+        if (Input.GetAxis("Fire4") != 0 && !isPlayerOne)
         {
-           GameObject bPrefab = PhotonNetwork.Instantiate(projectile[ProjectilePrefab].name, firePos[0].position, Quaternion.Euler(0, 0, -90),0) as GameObject;
-           bPrefab.GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500);
+            GameObject bPrefab = PhotonNetwork.Instantiate(projectile[ProjectilePrefab].name, firePos[0].position, Quaternion.Euler(0, 0, -90), 0) as GameObject;
+            bPrefab.GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500);
             shotReset = 0.5f;
 
         }
-        else if (Input.GetAxis("Fire5") != 0 && isPlayerOne )
+        else if (Input.GetAxis("Fire5") != 0 && isPlayerOne)
         {
-            GameObject bPrefab = PhotonNetwork.Instantiate (projectile[ProjectilePrefab].name, firePos[0].position, Quaternion.Euler(0, 0, 90) ,0) as GameObject;
-           bPrefab.GetComponent<Rigidbody2D>().AddForce(Vector3.left* 500);
+            GameObject bPrefab = PhotonNetwork.Instantiate(projectile[ProjectilePrefab].name, firePos[0].position, Quaternion.Euler(0, 0, 90), 0) as GameObject;
+            bPrefab.GetComponent<Rigidbody2D>().AddForce(Vector3.left * 500);
             shotReset = 0.5f;
         }
     }
-    [PunRPC ]
+    [PunRPC]
     void FirePro()
     {
-       
-        if (Input.GetAxis("Fire4") != 0 && !isPlayerOne )
+        // Debug.Log("Fire be working ");
+
+        if (Input.GetAxis("Fire4") != 0|| onAndroid && !isPlayerOne && shotReset < 0)
         {
-                //Debug.Log("PEw PEW");
-                GameObject[] clone = new GameObject [3];
-                //clone= Instantiate(projectile, firePos[0].position, transform.rotation) as Rigidbody;
-                if (attackLevel ==0)
-                {
-                    clone[0] = Instantiate(projectile[ProjectilePrefab], firePos[0].position, Quaternion.Euler(0, 0, -90)) as GameObject;
-                    clone[0].GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500, ForceMode2D.Force);
-                    aud.Play();
+            //Debug.Log("PEw PEW");
+            GameObject[] clone = new GameObject[3];
+            //clone= Instantiate(projectile, firePos[0].position, transform.rotation) as Rigidbody;
+            if (attackLevel == 0)
+            {
+                clone[0] = Instantiate(projectile[ProjectilePrefab], firePos[0].position, Quaternion.Euler(0, 0, -90)) as GameObject;
+                clone[0].GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500, ForceMode2D.Force);
+                aud.Play();
                 shotReset = 0.5f;
-                }
-                else if (attackLevel ==1 )
+            }
+            else if (attackLevel == 1)
+            {
+                for (int i = 1; i < 3; i++)
                 {
-                    for (int i = 1; i < 3; i++)
-                    {
                     clone[i] = Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, -90)) as GameObject;
                     clone[i].GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500, ForceMode2D.Force);
-                   aud.Play();
+                    aud.Play();
                     shotReset = 0.5f;
-                    }
                 }
-                else if (attackLevel == 2)
+            }
+            else if (attackLevel == 2)
+            {
+                for (int i = 0; i < 3; i++)
                 {
-                    for (int i =0; i <3 ; i++)
-                    {
-                    clone [i]= Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, -90)) as GameObject;
+                    clone[i] = Instantiate(projectile[ProjectilePrefab], firePos[i].position, Quaternion.Euler(0, 0, -90)) as GameObject;
                     clone[i].GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500, ForceMode2D.Force);
                     aud.Play();
                     shotReset = 0.5f;
-                    }
                 }
- 
+            }
+
         }
-            else if (Input.GetAxis("Fire5")!=0 &&isPlayerOne == true)
-            {
+        else if (Input.GetAxis("Fire5") != 0 || onAndroid&& isPlayerOne == true  &&shotReset < 0)
+        {
                 //Debug.Log("BEw BEW");
                 GameObject[] clone = new GameObject[3];
                 //clone= Instantiate(projectile, firePos[0].position, transform.rotation) as Rigidbody;
