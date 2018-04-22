@@ -34,13 +34,19 @@ public class HealthCs : PunBehaviour
 
             health = GameObject.Find("Player_txt");
         }
-        if (isMultiplayerActive|| isLocalMultiplayerActive&& isPlayerOne)
+        if (isMultiplayerActive&& isPlayerOne)
         {
             //health = GameObject.Find("Player_txt");
             health = GameObject.Find("Player0_txt");
             PlayerName = GameObject.Find("PlayerName0");
         }
-         if (isLocalMultiplayerActive|| !isPlayerOne)
+        if (isMultiplayerActive && !isPlayerOne)
+        {
+
+            health = GameObject.Find("Player_txt");
+            PlayerName = GameObject.Find("PlayerName");
+        }
+        if (isLocalMultiplayerActive|| !isPlayerOne)
         {
             health = GameObject.Find("Player_txt");
             PlayerName = GameObject.Find("PlayerName");
@@ -99,37 +105,6 @@ public class HealthCs : PunBehaviour
 
         }
     }
-    /* void looseLife ()
-     {
-         photonView.RPC("win", PhotonTargets.Others);
-         //Invoke("win", 0.5f);
-         SceneManager.LoadScene("Die");
-     }
-     [PunRPC]
-     void win()
-     {
-
-
-         if (!photonView.isMine)
-         {
-             return;
-         }
-
-
-         Debug.Log(gameObject.name + "- 1");
-         Debug.Log(shotsToDie.ToString());
-         Debug.Log(photonView.isMine);
-         //put counter for num of players when = > 2 is winner
-         PhotonNetwork.Disconnect();
-         if (this.shotsToDie >=1)
-         {
-             SceneManager.LoadScene("Win");
-             return;
-         }
-
-         SceneManager.LoadScene("Die");
-     }*/
-
     public void TakeDamage()
     {
         shotsToDie--;

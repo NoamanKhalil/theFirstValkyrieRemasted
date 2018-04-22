@@ -1,4 +1,4 @@
-Android
+WindowsStandalone
 SceneListBegin?
 Assets/Scenes/MainScene.unity
 Assets/Scenes/Win.unity
@@ -276,6 +276,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 528ea1fd7c01796fc60c4e2f172ea229 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.OnAwakePhysicsSettings
 4efe297689455799fab987dfaf7ba0d5 Assembly-CSharp.dll:.OnClickLoadSomething
+a373e8b1738062dd1ca78770d708efa9 Assembly-CSharp.dll:.Converter
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.PointedAtGameObjectInfo
 ea580b2edab741d1d6e6445b14097645 Assembly-CSharp.dll:.RPGCamera
 173a033cde910692227c728d6b89fedd Assembly-CSharp.dll:.OnClickCallMethod

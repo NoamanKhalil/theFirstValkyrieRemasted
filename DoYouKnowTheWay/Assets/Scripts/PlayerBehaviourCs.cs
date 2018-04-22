@@ -278,6 +278,7 @@ public class PlayerBehaviourCs : PunBehaviour
             GameObject bPrefab = PhotonNetwork.Instantiate(projectile[ProjectilePrefab].name, firePos[0].position, Quaternion.Euler(0, 0, -90), 0) as GameObject;
             bPrefab.GetComponent<Rigidbody2D>().AddForce(Vector3.right * 500);
             shotReset = 0.5f;
+            aud.Play();
 
         }
         else if (Input.GetAxis("Fire5") != 0 && isPlayerOne)
@@ -285,6 +286,7 @@ public class PlayerBehaviourCs : PunBehaviour
             GameObject bPrefab = PhotonNetwork.Instantiate(projectile[ProjectilePrefab].name, firePos[0].position, Quaternion.Euler(0, 0, 90), 0) as GameObject;
             bPrefab.GetComponent<Rigidbody2D>().AddForce(Vector3.left * 500);
             shotReset = 0.5f;
+            aud.Play();
         }
     }
     [PunRPC]
